@@ -1,7 +1,7 @@
 export default function Page() {
 	return (
 		<p>
-			blah blah blah
+		about blah blah
 		</p>
 	)
 }
