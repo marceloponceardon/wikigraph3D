@@ -1,4 +1,4 @@
-# Wikigraph
+# Wikigraph3D
 
 __A 3D graph connecting wikipedia articles by their hyperlinks__.
 
