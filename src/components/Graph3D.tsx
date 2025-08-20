@@ -11,7 +11,6 @@ export default function Graph3D() {
 		const fetchArticle = async () => {
 			const res = await fetch("/api/wikipedia/today");
 			const data = await res.json();
-			console.log(data);
 			setArticle(data.title);
 		};
 
