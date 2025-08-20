@@ -1,6 +1,27 @@
 # .husky/pre-commit
 
-prettier $(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g') --write --ignore-unknown
+# Get staged files (added, copied, modified, renamed)
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g')
+
+# 0. If no files staged, exit early
+[ -z "$STAGED_FILES" ] && echo "No staged files..." && exit 0
+
+echo "files to check:"
+echo $STAGED_FILES
+
+# 1. Run Prettier on staged files (ignores unknown file types)
+echo "prettier check..."
+prettier $STAGED_FILES --write --ignore-unknown
+
+# Re-stage any files that Prettier reformatted
 git update-index --again
 
-# npm test
+# 2. Run ESLint on staged JS/TS files
+echo "ESLint check..."
+# echo "$STAGED_FILES" | grep -E '\.(js|ts|tsx)$' | xargs npx eslint --max-warnings=0 --fix
+eslint $STAGED_FILES --ext .js,.ts,.tsx --fix
+
+# Re-stage any files that ESLint fixed
+git update-index --again
+
+echo "pre-commit checks passed!"
