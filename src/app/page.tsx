@@ -1,7 +1,7 @@
+import Graph3D from "@/components/Graph3D";
 export default function Page() {
 	return (
-		<p>
-			blah blah blah
-		</p>
+		<Graph3D />
 	)
+
 }
