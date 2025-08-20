@@ -16,14 +16,17 @@ export async function GET() {
     });
 
 		if (!res.ok) {
+			console.log("error: !res.ok");
 			return NextResponse.json({ title: "Error fetching article" });
 		}
 
 		const data = await res.json();
 		const todayArticle = data.tfa?.title || "No article today";
 
+		console.log(todayArticle);
 		return NextResponse.json({ title: todayArticle });
 	} catch (err) {
+		console.log("error: " + err);
 		return NextResponse.json({ title: "Error fetching article" });
 		console.err(err);
 	}
