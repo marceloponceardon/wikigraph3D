@@ -18,6 +18,10 @@
 
 _This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app)._
 
+<!-- TODO:
+### Run Locally
+-->
+
 ### Development
 
 0. `git clone` the repository
@@ -41,13 +45,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Tech Stack
 
 - [Next.js](https://nextjs.org) (Framework)
-- [THREE.js](https://threejs.org), [react-force-graph](https://github.com/vasturiano/react-force-graph?tab=readme-ov-file) (3D Rendering)
+- [THREE.js](https://threejs.org), [react-three-fiber](https://github.com/pmndrs/react-three-fiber), [react-three-drei](https://github.com/pmndrs/drei), [react-force-graph](https://github.com/vasturiano/react-force-graph?tab=readme-ov-file) (3D Rendering)
 - [Wikimedia API](https://api.wikimedia.org/wiki/Main_Page) (Wikipedia Article Fetching)
 
 <!-- TODO:
-## Lincense
+## License
 -->
 
 <p align="center">
-    Marcelo "Mars" Ponce
+    made by: Mars Ponce
 </p>
