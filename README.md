@@ -30,6 +30,8 @@ _This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next
 
 - Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+_See the current status of the project [HERE](https://github.com/users/marceloponceardon/projects/12) for development tickets._
+
 <!--
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 -->
