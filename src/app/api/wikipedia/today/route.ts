@@ -22,11 +22,11 @@ export async function GET() {
     }
 
     const data = await res.json();
-    const todayArticle = data.tfa?.displaytitle || "No article today";
-    console.log(data.tfa);
+    const title = data.tfa?.displaytitle || "No article today";
+    const thumbnail = data.tfa?.thumbnail || "No thumbnail found";
 
-    console.log(todayArticle);
-    return NextResponse.json({ title: todayArticle });
+    console.log(title, thumbnail);
+    return NextResponse.json({ title: title, thumbnail: thumbnail });
   } catch (err) {
     console.log("error: " + err);
     return NextResponse.json({ title: "Error fetching article" });
