@@ -24,9 +24,17 @@ export async function GET() {
     const data = await res.json();
     const title = data.tfa?.displaytitle || "No article today";
     const thumbnail = data.tfa?.thumbnail || "No thumbnail found";
+    const content_urls = data.tfa?.content_urls || "No urls found";
+    const description = data.tfa?.description || "No description found";
+    const extract = data.tfa?.extract_html || "No extract found";
 
-    console.log(title, thumbnail);
-    return NextResponse.json({ title: title, thumbnail: thumbnail });
+    return NextResponse.json({
+      title: title,
+      thumbnail: thumbnail,
+      content_urls: content_urls,
+      description: description,
+      extract: extract,
+    });
   } catch (err) {
     console.log("error: " + err);
     return NextResponse.json({ title: "Error fetching article" });
