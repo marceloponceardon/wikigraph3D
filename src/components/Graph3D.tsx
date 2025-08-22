@@ -1,45 +1,51 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Sphere, MeshWobbleMaterial, Sky, Text } from "@react-three/drei";
+
+const ForceGraph3D = dynamic(() => import("react-force-graph-3d"), {
+  ssr: false,
+});
 
 export default function Graph3D() {
-	const [article, setArticle] = useState("Loading...");
+  const [article, setArticle] = useState("Loading...");
 
-	useEffect(() => {
-		const fetchArticle = async () => {
-			const res = await fetch("/api/wikipedia/today");
-			const data = await res.json();
-			setArticle(data.title);
-		};
+  useEffect(() => {
+    const fetchArticle = async () => {
+      const res = await fetch("/api/wikipedia/today");
+      const data = await res.json();
+      setArticle(data.title);
+    };
 
-		fetchArticle();
-	}, []);
+    fetchArticle();
+  }, []);
 
-	return (
-		<Canvas
-			camera={{ position: [0, 0, 10], fov: 60 }}
-			style={{ width: "100%", height: "600px" }}
+  const data = {
+    nodes: [
+      { id: "1", name: article },
+      { id: "2" },
+      { id: "3" },
+      { id: "4" },
+      { id: "5" },
+    ],
+    links: [
+      { source: "1", target: "2" },
+      { source: "2", target: "1" }, // opposite direction
+      { source: "2", target: "3" },
+      { source: "3", target: "4" },
+      { source: "4", target: "2" },
+      { source: "4", target: "5" },
+      { source: "5", target: "1" },
+      { source: "1", target: "3" },
+    ],
+  };
 
-		>
-			{/* Lighting */}
-			<ambientLight intensity={0.5} />
-			<directionalLight position={[5, 5, 5]} intensity={1} />
-			<Sky distance={450000} sunPosition={[1, 2, 3]} />
-
-			{/*Sample node*/}
-			<Sphere args={[1, 32, 32]} position={[0, 0, 0]}>
-				<MeshWobbleMaterial color="Pink" speed={1} factor={0.6} />
-			</Sphere>
-
-      {/* Article title above the node */}
-      <Text position={[0, 1.5, 0]} fontSize={0.4} color="white">
-        {article}
-      </Text>
-
-			{/*Orbit Controls for camera*/}
-			<OrbitControls />
-		</Canvas>
-	);
+  return (
+    <ForceGraph3D
+      graphData={data}
+      nodeAutoColorBy="id"
+      linkDirectionalArrowLength={3.5}
+      linkDirectionalArrowRelPos={1} // put arrow at the target end
+    />
+  );
 }

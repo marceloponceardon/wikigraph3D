@@ -10,14 +10,11 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.3",
-    "@react-three/fiber": "^9.3.0",
-    "axios": "^1.11.0",
     "husky": "^9.1.7",
     "next": "^15.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "three": "^0.179.1"
+    "react-force-graph-3d": "^1.28.0"
   },
   "devDependencies": {
     "@eslint/css": "^0.10.0",
