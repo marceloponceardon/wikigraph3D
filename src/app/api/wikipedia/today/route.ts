@@ -36,7 +36,6 @@ export async function GET() {
       extract: extract,
     });
   } catch (err) {
-    console.log("error: " + err);
     return NextResponse.json({ title: "Error fetching article" });
     console.err(err);
   }
