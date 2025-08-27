@@ -17,7 +17,7 @@ export async function GET() {
     });
 
     if (!res.ok) {
-      console.log("error: !res.ok");
+      console.error("error: !res.ok");
       return NextResponse.json(
         { error: "Error fetching article" },
         { status: 500 },
@@ -43,7 +43,10 @@ export async function GET() {
   } catch (err) {
     console.error(err);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      {
+        error: "Internal Server Error",
+        code: err.cause.code,
+      },
       { status: 500 },
     );
   }

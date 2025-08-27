@@ -30,7 +30,10 @@ export async function GET(req, {}) {
   } catch (err) {
     console.error(err);
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: "Internal Server Error",
+        code: err.cause.code,
+      },
       { status: 500 },
     );
   }
