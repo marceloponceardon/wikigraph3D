@@ -4,29 +4,30 @@ export async function GET(req, {}) {
   try {
     const { searchParams } = new URL(req.url);
     const title = searchParams.get("title");
+    const limit = searchParams.get("limit") || "10"; // Default limit is 10
 
-    const url = `https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=${title}&limit=10`;
+    const url = `https://api.wikimedia.org/core/v1/wikipedia/en/search/page?q=${title}&limit=${limit}`;
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${process.env.WIKIMEDIA_ACCESS_TOKEN}`,
         "User-Agent": `${process.env.APP_NAME} (${process.env.CONTACT})`,
       },
     });
-    console.log(res.status);
     const data = await res.json();
     console.log(data);
     if (!res.ok) {
-      console.log("error: !res.ok");
+      console.error("!res.ok");
       return NextResponse.json({
-        error: `Error finding links for title=${title}`,
+        error: `Error searching for title=${title}`,
       });
     }
 
     return NextResponse.json({
       title: title,
+      results: data.pages,
     });
   } catch (err) {
     return NextResponse.json({ error: err });
-    console.log(err);
+    console.error(err);
   }
 }
