@@ -3,11 +3,10 @@ import { NextResponse } from "next/server";
 export async function GET(req, {}) {
   try {
     const { searchParams } = new URL(req.url);
-    //		const title = searchParams.get("title");
-    const id = searchParams.get("id");
+    const title = searchParams.get("title");
     const limit = searchParams.get("limit") || "max"; // default limit is 10
 
-    const url = `https://en.wikipedia.org/w/api.php?action=query&generator=links&pageids=${id}&format=json&gpllimit=${limit}`;
+    const url = `https://en.wikipedia.org/w/api.php?action=query&generator=links&titles=${title}&format=json&gpllimit=${limit}`;
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${process.env.WIKIMEDIA_ACCESS_TOKEN}`,
@@ -25,8 +24,8 @@ export async function GET(req, {}) {
     }
 
     return NextResponse.json({
-      links: data.query.pages,
       continue: data.continue,
+      links: data.query.pages,
     });
   } catch (err) {
     console.error(err);
