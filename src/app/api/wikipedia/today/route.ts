@@ -18,25 +18,39 @@ export async function GET() {
 
     if (!res.ok) {
       console.log("error: !res.ok");
-      return NextResponse.json({ title: "Error fetching article" });
+      return NextResponse.json(
+        { error: "Error fetching article" },
+        { status: 500 },
+      );
     }
 
     const data = await res.json();
-    const title = data.tfa?.displaytitle || "No article today";
+    const title = data.tfa?.title || "No title";
+    const id = data.tfa?.pageid || "No pageid";
+    const display = data.tfa?.displaytitle || "No display title";
     const thumbnail = data.tfa?.thumbnail || "No thumbnail found";
+    const page_url = data.tfa?.content_urls?.desktop.page || "No url found";
     const content_urls = data.tfa?.content_urls || "No urls found";
     const description = data.tfa?.description || "No description found";
     const extract = data.tfa?.extract_html || "No extract found";
 
+    console.log(data);
+
     return NextResponse.json({
+      id: id,
       title: title,
+      display: display,
       thumbnail: thumbnail,
+      page_url: page_url,
       content_urls: content_urls,
       description: description,
       extract: extract,
     });
   } catch (err) {
-    return NextResponse.json({ title: "Error fetching article" });
-    console.err(err);
+    console.error(err);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

@@ -17,17 +17,20 @@ export async function GET(req, {}) {
     console.log(data);
     if (!res.ok) {
       console.error("!res.ok");
-      return NextResponse.json({
-        error: `Error searching for title=${title}`,
-      });
+      return NextResponse.json(
+        { error: "Error searching for article" },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({
-      title: title,
-      results: data.pages,
+      pages: data.pages,
     });
   } catch (err) {
-    return NextResponse.json({ error: err });
     console.error(err);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
