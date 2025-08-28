@@ -1,7 +1,4 @@
-import Graph3D from "@/components/Graph3D";
+import DynamicGraph3D from "@/components/DynamicGraph3D";
 export default function Page() {
-	return (
-		<Graph3D />
-	)
-
+  return <DynamicGraph3D />;
 }
