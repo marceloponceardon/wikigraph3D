@@ -12,16 +12,17 @@ export default function DynamicGraph3D() {
   const [data, setData] = useState({ nodes: [], links: [] });
 
   useEffect(() => {
+    // Initialize the graph on the first node
     const fetchInitialNode = async () => {
       const res = await fetch("/api/wikipedia/today");
-      const rootNode = await res.json();
+      const data = await res.json();
 
-      const title = rootNode.title;
-      const thumbnail = rootNode.thumbnail.source;
-      const content = rootNode.contentUrls;
+      const title = data.title;
+      const thumbnail = data.thumbnail.source;
+      const content = data.contentUrls;
 
       setData({
-        nodes: [{ id: title, name: title, thumbnail: thumbnail }],
+        nodes: [{ id: title, name: title, thumbnail, content }],
         links: [],
       });
     };
@@ -29,9 +30,41 @@ export default function DynamicGraph3D() {
     fetchInitialNode();
   }, []);
 
+  const handleClick = useCallback(async (node) => {
+    // Call API for related nodes
+    const res = await fetch(`/api/wikipedia/links?title=${node.id}&limit=max`);
+    let results = await res.json(); // assume this returns an array of articles
+
+    results = Object.values(results.links);
+
+    setData(({ nodes, links }) => {
+      const existingIds = new Set(nodes.map((n) => n.id));
+
+      const newNodes = results.map((data) => {
+        const title = data.title;
+        const thumbnail = data.thumbnail?.source;
+        const content = data.contentUrls;
+
+        return { id: title, name: title, thumbnail, content };
+      });
+
+      // Filter duplicates
+      const uniqueNodes = newNodes.filter((n) => !existingIds.has(n.id));
+
+      return {
+        nodes: [...nodes, ...uniqueNodes],
+        links: [
+          ...links,
+          ...uniqueNodes.map((n) => ({ source: node.id, target: n.id })),
+        ],
+      };
+    });
+  }, []);
+
   return (
     <ForceGraph3D
       graphData={data}
+      onNodeClick={handleClick}
       nodeAutoColorBy="id"
       linkDirectionalArrowLength={3.5}
       linkDirectionalArrowRelPos={1} // put arrow at the target end
