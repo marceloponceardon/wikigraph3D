@@ -30,7 +30,6 @@ export async function GET(req, {}) {
     const continue_ = responseJson.continue;
     const query = responseJson.query;
     const batchComplete = responseJson.batchcomplete;
-    console.log(query);
 
     if (!res.ok) {
       console.error("res!.ok");
