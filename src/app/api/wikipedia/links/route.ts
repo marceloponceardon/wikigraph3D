@@ -6,15 +6,32 @@ export async function GET(req, {}) {
     const title = searchParams.get("title");
     const limit = searchParams.get("limit") || "max"; // default limit is 10
 
-    const url = `https://en.wikipedia.org/w/api.php?action=query&generator=links&titles=${title}&format=json&gpllimit=${limit}`;
+    //     const url = `https://en.wikipedia.org/w/api.php?action=query&generator=links&titles=${title}&format=json&gpllimit=${limit}`;
+    const url = `https://en.wikipedia.org/w/api.php
+		  ?action=query
+		  &generator=links
+		  &titles=${encodeURIComponent(title)}
+		  &format=json
+		  &gpllimit=${limit}
+		  &prop=pageimages|info|description|extracts
+		  &inprop=url
+		  &piprop=thumbnail
+		  &pithumbsize=200
+		  &exintro=true
+		  &explaintext=false`.replace(/\s+/g, "");
+
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${process.env.WIKIMEDIA_ACCESS_TOKEN}`,
         "User-Agent": `${process.env.APP_NAME} (${process.env.CONTACT})`,
       },
     });
-    const data = await res.json();
-    console.log(data);
+    const responseJson = await res.json();
+    const continue_ = responseJson.continue;
+    const query = responseJson.query;
+    const batchComplete = responseJson.batchcomplete;
+    console.log(query);
+
     if (!res.ok) {
       console.error("res!.ok");
       return NextResponse.json(
@@ -23,9 +40,33 @@ export async function GET(req, {}) {
       );
     }
 
+    const nodes = Object.values(query.pages || {}).map((page) => ({
+      id: page.pageid,
+      name: page.title,
+      thumbnail: page.thumbnail ?? null,
+      content: {
+        desktop: {
+          page: page.fullurl ?? null,
+          edit: page.editurl ?? null,
+          canonical: page.canonicalurl ?? null,
+        },
+        mobile: {
+          page:
+            page.fullurl?.replace("en.wikipedia.org", "en.m.wikipedia.org") ??
+            null,
+          edit:
+            page.editurl?.replace("en.wikipedia.org", "en.m.wikipedia.org") ??
+            null,
+        },
+      },
+      description: page.description ?? null,
+      extract: page.extract ?? null,
+    }));
+
     return NextResponse.json({
-      continue: data.continue,
-      links: data.query.pages,
+      batchcomplete: batchComplete,
+      continue: continue_,
+      nodes,
     });
   } catch (err) {
     console.error(err);
