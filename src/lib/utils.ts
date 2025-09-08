@@ -2,6 +2,8 @@
 
 import type { MediaWikiResponse, Page, Node } from "@/types/wikipedia";
 
+// Convert a page object into a Node object
+// NOTE: This function does not work with the today route completeley -> see src/app/api/wikipedia/today/route.ts
 export function normalizePageToNode(page: Page): Node {
   return {
     id: page.pageid,

@@ -1,5 +1,6 @@
 // src/types/wikipedia.ts
 
+// Page object returned in the MediaWiki api response
 export interface Page {
   pageid: number;
   ns: number;
@@ -24,6 +25,7 @@ export interface Page {
   extract?: string;
 }
 
+// MediaWiki response object
 export interface MediaWikiResponse {
   batchcomplete?: string;
   continue?: {
@@ -35,6 +37,7 @@ export interface MediaWikiResponse {
   };
 }
 
+// Node object
 export interface Node {
   id: number;
   name: string;
