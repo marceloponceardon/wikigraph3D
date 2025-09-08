@@ -25,27 +25,29 @@ export async function GET() {
     }
 
     const data = await res.json();
+    const id = data.tfa?.pageid || "No id";
     const title = data.tfa?.titles.normalized || "No title";
     const thumbnail = data.tfa?.thumbnail || "No thumbnail found";
-    const content_urls = data.tfa?.content_urls || "No urls found";
+    const content = data.tfa?.content_urls || "No urls found";
     const description = data.tfa?.description || "No description found";
     const extract = data.tfa?.extract_html || "No extract found";
 
-    console.log(data.tfa);
-
     return NextResponse.json({
-      title: title,
-      thumbnail: thumbnail,
-      content_urls: content_urls,
-      description: description,
-      extract: extract,
+      node: {
+        id: id,
+        name: title,
+        thumbnail,
+        content,
+        description,
+        extract,
+      },
     });
   } catch (err) {
     console.error(err);
     return NextResponse.json(
       {
         error: "Internal Server Error",
-        code: err.cause.code,
+        code: `${err}`,
       },
       { status: 500 },
     );
