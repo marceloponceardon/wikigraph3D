@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import * as THREE from "three";
 
 const WIKIPEDIA_ICON_URL =
@@ -28,23 +28,30 @@ export default function DynamicGraph3D() {
   }, []);
 
   const expandGraph = useCallback(async (node) => {
-    const limit = "max";
+    const limit = "500";
     const res = await fetch(
       `/api/wikipedia/links?title=${node.name}&limit=${limit}`,
-    ); // use numeric id directly
+    );
     const { nodes: newNodes } = await res.json();
 
     setData(({ nodes, links }) => {
       const existingIds = new Set(nodes.map((n) => n.id));
 
-      const uniqueNodes = newNodes.filter((n) => !existingIds.has(n.id));
+      // Split nodes into truly new vs already existing
+      const nodesToAdd = newNodes.filter((n) => !existingIds.has(n.id));
+      const existingNodeIds = newNodes
+        .filter((n) => existingIds.has(n.id))
+        .map((n) => n.id);
+
+      // Add links for all new nodes, also link to existing nodes
+      const newLinks = [
+        ...nodesToAdd.map((n) => ({ source: node.id, target: n.id })),
+        ...existingNodeIds.map((id) => ({ source: node.id, target: id })),
+      ];
 
       return {
-        nodes: [...nodes, ...uniqueNodes],
-        links: [
-          ...links,
-          ...uniqueNodes.map((n) => ({ source: node.id, target: n.id })),
-        ],
+        nodes: [...nodes, ...nodesToAdd],
+        links: [...links, ...newLinks],
       };
     });
   }, []);
@@ -62,6 +69,8 @@ export default function DynamicGraph3D() {
     return sprite;
   };
 
+  const fgRef = useRef();
+
   return (
     <ForceGraph3D
       graphData={data}
@@ -70,6 +79,9 @@ export default function DynamicGraph3D() {
       linkDirectionalArrowLength={3.5}
       linkDirectionalArrowRelPos={1} // put arrow at the target end
       nodeThreeObject={createNodeObject}
+      ref={fgRef}
+      //			cooldownTicks={100}
+      //      onEngineStop={() => fgRef.current.zoomToFit(400)}
     />
   );
 }
