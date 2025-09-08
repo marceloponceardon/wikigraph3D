@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { TFA_API_BASE } from "@/lib/constants";
+import { normalizePageToNode } from "@/lib/utils";
 
 export async function GET() {
   try {
@@ -7,7 +9,7 @@ export async function GET() {
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
 
-    const url = `https://api.wikimedia.org/feed/v1/wikipedia/en/featured/${year}/${month}/${day}`;
+    const url = `${TFA_API_BASE}/en/featured/${year}/${month}/${day}`;
 
     const res = await fetch(url, {
       headers: {
@@ -25,23 +27,13 @@ export async function GET() {
     }
 
     const data = await res.json();
-    const id = data.tfa?.pageid || "No id";
-    const title = data.tfa?.titles.normalized || "No title";
-    const thumbnail = data.tfa?.thumbnail || "No thumbnail found";
-    const content = data.tfa?.content_urls || "No urls found";
-    const description = data.tfa?.description || "No description found";
-    const extract = data.tfa?.extract_html || "No extract found";
 
-    return NextResponse.json({
-      node: {
-        id: id,
-        name: title,
-        thumbnail,
-        content,
-        description,
-        extract,
-      },
-    });
+    const node = normalizePageToNode(data.tfa);
+    node.content = data.tfa?.content_urls; // Since normalizePageToNode doesn't work 100% with this type of response
+
+    console.log(node);
+
+    return NextResponse.json({ node });
   } catch (err) {
     console.error(err);
     return NextResponse.json(
