@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { normalizePageToNode } from "@/lib/utils";
 import { WIKI_API_BASE } from "@/lib/constants";
 
-export async function getThumbnails(
+async function getThumbnails(
   pages: Page[],
   batchSize: number = 50,
 ): Promise<Page[]> {
