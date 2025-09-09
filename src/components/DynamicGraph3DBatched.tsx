@@ -15,7 +15,41 @@ const ForceGraph3D = dynamic(() => import("react-force-graph-3d"), {
 async function fetchInitialNode(): Promise<Node> {
   const res = await fetch(`${API}/today`);
   const responseJson = await res.json();
-  return responseJson.node;
+  return responseJson.node as Node;
+}
+
+async function fetchLinkedNodes(
+  node: Node,
+  limit: number = 100,
+): Promise<Node[]> {
+  const res = await fetch(`${API}/links?title=${node.name}&limit=${limit}`);
+  const { nodes } = await res.json();
+  return nodes as Node[];
+}
+
+function createNodeObject(node: Node): THREE.Sprite {
+  const texture = new THREE.TextureLoader().load(
+    node.thumbnail?.source || WIKIPEDIA_ICON_URL,
+  );
+  const material = new THREE.SpriteMaterial({ map: texture });
+  const sprite = new THREE.Sprite(material);
+
+  // Default size
+  let width = node.thumbnail?.width || 64;
+  let height = node.thumbnail?.height || 64;
+
+  // Scaling
+  const MAX_SIZE = 128;
+  const SCALE_FACTOR = 0.1;
+
+  const maxDim = Math.max(width, height);
+  if (maxDim > 0) {
+    const scale = (MAX_SIZE / maxDim) * SCALE_FACTOR;
+    width *= scale;
+    height *= scale;
+  }
+  sprite.scale.set(width, height, 1);
+  return sprite;
 }
 
 export default function DynamicGraph3DBatched() {
@@ -56,36 +90,6 @@ export default function DynamicGraph3DBatched() {
       };
     });
   }, []);
-
-  const createNodeObject = (node) => {
-    let texture;
-    if (node.thumbnail) {
-      texture = new THREE.TextureLoader().load(node.thumbnail.source);
-    } else {
-      texture = new THREE.TextureLoader().load(WIKIPEDIA_ICON_URL);
-    }
-    const material = new THREE.SpriteMaterial({ map: texture });
-    const sprite = new THREE.Sprite(material);
-
-    // Default size
-    let width = node.thumbnail?.width || 64;
-    let height = node.thumbnail?.height || 64;
-
-    // Node scaling
-    const MAX_SIZE = 128;
-    const SCALE_FACTOR = 0.1;
-
-    const maxDim = Math.max(width, height);
-    if (maxDim > 0) {
-      const scale = (MAX_SIZE / maxDim) * SCALE_FACTOR;
-      width *= scale;
-      height *= scale;
-    }
-
-    sprite.scale.set(width, height, 1);
-
-    return sprite;
-  };
 
   const fgRef = useRef();
 
