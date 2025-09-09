@@ -65,3 +65,15 @@ export interface Node {
   };
   relevance?: number;
 }
+
+// Link Object
+export interface Link {
+  source: string;
+  target: string;
+}
+
+// Graph Data Object
+export interface GraphData {
+  nodes: Node[];
+  links: Link[];
+}
