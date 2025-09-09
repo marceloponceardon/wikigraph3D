@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import * as THREE from "three";
 import TWEEN from "@tweenjs/tween.js";
 import { WIKIPEDIA_ICON_URL } from "@/lib/constants";
-import { Node } from "@/lib/types";
+import { Node, Link, GraphData } from "@/lib/types";
 import { API } from "@/lib/constants";
 
 const ForceGraph3D = dynamic(() => import("react-force-graph-3d"), {
@@ -25,6 +25,31 @@ async function fetchLinkedNodes(
   const res = await fetch(`${API}/links?title=${node.name}&limit=${limit}`);
   const { nodes } = await res.json();
   return nodes as Node[];
+}
+
+function mergeGraphData(
+  node: Node,
+  newNodes: Node[],
+  oldData: GraphData,
+): GraphData {
+  const existingIds = new Set(oldData.nodes.map((n) => n.id));
+
+  // Split nodes into truly new vs already existing
+  const nodesToAdd: Node[] = newNodes.filter((n) => !existingIds.has(n.id));
+  const existingNodeIds = newNodes
+    .filter((n) => existingIds.has(n.id))
+    .map((n) => n.id);
+
+  // Add links for all new nodes, also link to existing nodes
+  const newLinks: Link[] = [
+    ...nodesToAdd.map((n) => ({ source: node.id, target: n.id })),
+    ...existingNodeIds.map((id) => ({ source: node.id, target: id })),
+  ];
+
+  return {
+    nodes: [...oldData.nodes, ...nodesToAdd],
+    links: [...oldData.links, ...newLinks],
+  } as GraphData;
 }
 
 function createNodeObject(node: Node): THREE.Sprite {
@@ -63,32 +88,8 @@ export default function DynamicGraph3DBatched() {
   }, []);
 
   const expandGraph = useCallback(async (node) => {
-    const limit = "100";
-    const res = await fetch(
-      `/api/wikipedia/links?title=${node.name}&limit=${limit}`,
-    );
-    const { nodes: newNodes } = await res.json();
-
-    setData(({ nodes, links }) => {
-      const existingIds = new Set(nodes.map((n) => n.id));
-
-      // Split nodes into truly new vs already existing
-      const nodesToAdd = newNodes.filter((n) => !existingIds.has(n.id));
-      const existingNodeIds = newNodes
-        .filter((n) => existingIds.has(n.id))
-        .map((n) => n.id);
-
-      // Add links for all new nodes, also link to existing nodes
-      const newLinks = [
-        ...nodesToAdd.map((n) => ({ source: node.id, target: n.id })),
-        ...existingNodeIds.map((id) => ({ source: node.id, target: id })),
-      ];
-
-      return {
-        nodes: [...nodes, ...nodesToAdd],
-        links: [...links, ...newLinks],
-      };
-    });
+    const newNodes = await fetchLinkedNodes(node);
+    setData((oldData) => mergeGraphData(node, newNodes, oldData));
   }, []);
 
   const fgRef = useRef();
