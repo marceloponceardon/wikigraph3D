@@ -78,7 +78,8 @@ function createNodeObject(node: Node): THREE.Sprite {
 }
 
 export default function DynamicGraph3DBatched() {
-  const [data, setData] = useState({ nodes: [], links: [] });
+  const [data, setData] = useState<GraphData>({ nodes: [], links: [] });
+  const fgRef = useRef();
 
   useEffect(() => {
     (async () => {
@@ -91,8 +92,6 @@ export default function DynamicGraph3DBatched() {
     const newNodes = await fetchLinkedNodes(node);
     setData((oldData) => mergeGraphData(node, newNodes, oldData));
   }, []);
-
-  const fgRef = useRef();
 
   return (
     <ForceGraph3D
