@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState, useCallback, useRef } from "react";
 import * as THREE from "three";
+import SpriteText from "three-spritetext";
 import TWEEN from "@tweenjs/tween.js";
 import { WIKIPEDIA_ICON_URL } from "@/lib/constants";
 import { Node, Link, GraphData } from "@/lib/types";
@@ -20,12 +21,14 @@ async function fetchInitialNode(): Promise<Node> {
 
 async function fetchLinkedNodes(
   node: Node,
-  limit: number = 100,
+  limit: number = 256,
 ): Promise<Node[]> {
   const res = await fetch(`${API}/links?title=${node.name}&limit=${limit}`);
   const { nodes } = await res.json();
   return nodes as Node[];
 }
+
+function handleNodeClick(node: Node) {}
 
 function mergeGraphData(
   node: Node,
@@ -52,12 +55,29 @@ function mergeGraphData(
   } as GraphData;
 }
 
-function createNodeObject(node: Node): THREE.Sprite {
+function mergeGraphDataSingle(
+  node: Node,
+  newNode: Node,
+  oldData: GraphData,
+): GraphData {
+  return {
+    nodes: [...oldData.nodes, newNode],
+    links: [...oldData.links, { source: node.id, target: newNode.id }],
+  } as GraphData;
+}
+
+function createNodeObject(node: Node, hoverNode: Node): THREE.Sprite {
   const texture = new THREE.TextureLoader().load(
     node.thumbnail?.source || WIKIPEDIA_ICON_URL,
   );
   const material = new THREE.SpriteMaterial({ map: texture });
   const sprite = new THREE.Sprite(material);
+
+  const geometry = new THREE.SphereGeometry(5, 32, 32); // radius 5, high detail
+  const sphereMaterial = new THREE.MeshStandardMaterial({
+    color: node.color || "lightgrey",
+  });
+  const sphere = new THREE.Mesh(geometry, sphereMaterial);
 
   // Default size
   let width = node.thumbnail?.width || 64;
@@ -74,37 +94,107 @@ function createNodeObject(node: Node): THREE.Sprite {
     height *= scale;
   }
   sprite.scale.set(width, height, 1);
-  return sprite;
+
+  // Text Label
+  const label = new SpriteText(node.name || node.id);
+  label.material.depthWrite = false; // background transparent
+  label.color = node.color;
+  label.textHeight = 2;
+
+  // Position the label above the image
+  label.position.set(0, height / 2, 0);
+
+  const group = new THREE.Group();
+  group.add(sprite);
+  group.add(label);
+
+  return group;
 }
 
 export default function DynamicGraph3DBatched() {
   const [data, setData] = useState<GraphData>({ nodes: [], links: [] });
+  const [hoverNode, setHoverNode] = useState<Node | null>(null);
+  const [loadingProgress, setLoadingProgress] = useState<number | null>(null);
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+
   const fgRef = useRef();
 
   useEffect(() => {
     (async () => {
       const root = await fetchInitialNode();
       setData({ nodes: [root], links: [] });
+      setSelectedNode(root);
     })();
   }, []);
 
   const expandGraph = useCallback(async (node) => {
     const newNodes = await fetchLinkedNodes(node);
-    setData((oldData) => mergeGraphData(node, newNodes, oldData));
+    const CHUNK_SIZE = 16;
+    const DELAY_MS = 1000;
+
+    // Split newNodes into chunks of newNodes
+    const nodeChunks: Node[][] = [];
+    for (let i = 0; i < newNodes.length; i += CHUNK_SIZE) {
+      nodeChunks.push(newNodes.slice(i, i + CHUNK_SIZE));
+    }
+
+    setLoadingProgress(0);
+
+    // Add each chunk one by one
+    nodeChunks.forEach((chunk, idx) => {
+      setTimeout(() => {
+        setData((oldData) => mergeGraphData(node, chunk, oldData));
+
+        // update progress %
+        const progress = Math.round(((idx + 1) / nodeChunks.length) * 100);
+        setLoadingProgress(progress);
+
+        if (progress >= 100) setLoadingProgress(null);
+      }, idx * DELAY_MS);
+    });
+
+    // setData((oldData) => mergeGraphData(node, newNodes, oldData));
   }, []);
 
+  const handleNodeClick = (node) => {
+    const distance = 20;
+    const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
+
+    fgRef.current.cameraPosition(
+      { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio },
+      node,
+      3000,
+    );
+
+    setSelectedNode(node);
+  };
+
   return (
-    <ForceGraph3D
-      graphData={data}
-      onNodeClick={expandGraph}
-      nodeAutoColorBy="id"
-      linkDirectionalArrowLength={3.5}
-      linkDirectionalArrowRelPos={1} // put arrow at the target end
-      nodeThreeObject={createNodeObject}
-      ref={fgRef}
-      //cooldownTicks={100}
-      //onRenderFrame={() => TWEEN.update()}
-      //onEngineStop={() => fgRef.current.zoomToFit(400)}
-    />
+    <div className="flex">
+      <ForceGraph3D
+        graphData={data}
+        onNodeRightClick={expandGraph}
+        onNodeClick={handleNodeClick}
+        nodeAutoColorBy="id"
+        linkAutoColorBy="target"
+        // linkWidth={1}
+        linkOpacity={1}
+        linkDirectionalArrowLength={3.5}
+        linkDirectionalArrowRelPos={1} // put arrow at the target end
+        onNodeHover={(node) => setHoverNode(node as Node | null)}
+        nodeThreeObject={createNodeObject}
+        ref={fgRef}
+        d3AlphaDecay={0.02} // slower stabilization
+        d3VelocityDecay={0.2} // friction-like damping
+      />
+      {selectedNode && (
+        <aside className="sidebar">
+          <h2>{selectedNode.name}</h2>
+          {selectedNode.description}
+          {selectedNode.extract}
+          {/* TODO: fetch and display wikipedia article here */}
+        </aside>
+      )}
+    </div>
   );
 }
