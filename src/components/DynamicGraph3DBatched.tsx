@@ -8,25 +8,11 @@ import TWEEN from "@tweenjs/tween.js";
 import { WIKIPEDIA_ICON_URL } from "@/lib/constants";
 import { Node, Link, GraphData } from "@/lib/types";
 import { API } from "@/lib/constants";
+import { fetchInitialNode, fetchLinkedNodes } from "@/lib/graph";
 
 const ForceGraph3D = dynamic(() => import("react-force-graph-3d"), {
   ssr: false,
 });
-
-async function fetchInitialNode(): Promise<Node> {
-  const res = await fetch(`${API}/today`);
-  const responseJson = await res.json();
-  return responseJson.node as Node;
-}
-
-async function fetchLinkedNodes(
-  node: Node,
-  limit: number = 256,
-): Promise<Node[]> {
-  const res = await fetch(`${API}/links?title=${node.name}&limit=${limit}`);
-  const { nodes } = await res.json();
-  return nodes as Node[];
-}
 
 function handleNodeClick(node: Node) {}
 
@@ -52,17 +38,6 @@ function mergeGraphData(
   return {
     nodes: [...oldData.nodes, ...nodesToAdd],
     links: [...oldData.links, ...newLinks],
-  } as GraphData;
-}
-
-function mergeGraphDataSingle(
-  node: Node,
-  newNode: Node,
-  oldData: GraphData,
-): GraphData {
-  return {
-    nodes: [...oldData.nodes, newNode],
-    links: [...oldData.links, { source: node.id, target: newNode.id }],
   } as GraphData;
 }
 
@@ -106,7 +81,7 @@ function createNodeObject(node: Node, hoverNode: Node): THREE.Sprite {
 
   const group = new THREE.Group();
   group.add(sprite);
-  group.add(label);
+  // group.add(label);
 
   return group;
 }
@@ -122,7 +97,7 @@ export default function DynamicGraph3DBatched() {
   useEffect(() => {
     (async () => {
       const root = await fetchInitialNode();
-      setData({ nodes: [root], links: [] });
+      setData({ nodes: [{ ...root, x: 0.1, y: 0.1, z: 0.1 }], links: [] });
       setSelectedNode(root);
     })();
   }, []);
@@ -152,19 +127,25 @@ export default function DynamicGraph3DBatched() {
         if (progress >= 100) setLoadingProgress(null);
       }, idx * DELAY_MS);
     });
-
-    // setData((oldData) => mergeGraphData(node, newNodes, oldData));
   }, []);
 
   const handleNodeClick = (node) => {
-    const distance = 20;
-    const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
-
-    fgRef.current.cameraPosition(
-      { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio },
-      node,
-      3000,
-    );
+    const distance = 100;
+    const hypot = Math.hypot(node.x, node.y, node.z);
+    if (hypot == 0) {
+      fgRef.current.cameraPosition(
+        { x: node.x, y: node.y, z: node.z + distance },
+        node,
+        3000,
+      );
+    } else {
+      const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
+      fgRef.current.cameraPosition(
+        { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio },
+        node,
+        3000,
+      );
+    }
 
     setSelectedNode(node);
   };
@@ -187,12 +168,17 @@ export default function DynamicGraph3DBatched() {
         d3AlphaDecay={0.02} // slower stabilization
         d3VelocityDecay={0.2} // friction-like damping
       />
+      {/* Sidebar */}
       {selectedNode && (
         <aside className="sidebar">
           <h2>{selectedNode.name}</h2>
           {selectedNode.description}
-          {selectedNode.extract}
-          {/* TODO: fetch and display wikipedia article here */}
+          <iframe
+            src={selectedNode?.content.desktop.page}
+            title={selectedNode?.description}
+            height="100%"
+            width="100%"
+          ></iframe>
         </aside>
       )}
     </div>
