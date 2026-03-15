@@ -1,17 +1,5 @@
 @reference "tailwindcss";
 
-/*
- * TODO: Fix this
-@layer utilities {
-  .articlecard .color-diagram {
-    @variant dark {
-      filter: invert(1) hue-rotate(180deg);
-      @apply text-black;
-    }
-  }
-}
-*/
-
 @layer components {
   /* ─── BASE ─────────────────────────────────────────────────── */
 
@@ -25,8 +13,8 @@
   }
 
   .articlecard[data-sidebar-mode="fullscreen"] > div {
-    @apply ml-67;
-    @apply mr-70;
+    margin-left: calc(20% - 0.75rem); /* 1/3 minus the 3-unit button panel */
+    margin-right: 20%; /* clean 1/3 */
   }
 
   .articlecard > * {
@@ -187,16 +175,16 @@
     @apply overflow-x-auto max-w-full;
   }
 
+  .articlecard .multiimageinner img {
+    @apply m-0;
+  }
+
   .articlecard[data-sidebar-mode="one-third"] .thumb {
     @apply flex justify-center;
   }
 
   .articlecard[data-sidebar-mode="one-third"] .multiimageinner {
     @apply float-none; /* cancel any inherited float */
-  }
-
-  .articlecard[data-sidebar-mode="one-third"] .multiimageinner {
-    @apply float-none;
   }
 
   .articlecard[data-sidebar-mode="fullscreen"] .multiimageinner {
@@ -208,7 +196,7 @@
   }
 
   .articlecard .tsingle {
-    @apply flex-1 min-w-0 h-full;
+    @apply flex-1;
   }
 
   .articlecard .thumbimage {
@@ -296,21 +284,43 @@
     @apply bg-black/5 dark:bg-white/5;
   }
 
-  .articlecard table * {
-    @apply list-none;
+  /* Reset lists inside tables */
+  .articlecard table ul,
+  .articlecard table ol {
+    @apply list-none ml-0;
   }
 
-  .articlecard .infobox ul {
-    @apply list-none;
+  .articlecard table li {
+    @apply list-none mb-0;
   }
 
-  /* Legend-style flex lists inside table cells */
-  .articlecard table td div ul {
-    @apply flex text-center;
+  /* Horizontal lists — items inline, separated by dots */
+  .articlecard .hlist ul,
+  .articlecard .hlist ol {
+    @apply list-none ml-0 inline;
   }
 
-  .articlecard table td div ul li {
-    @apply flex-auto text-center uppercase list-disc list-inside;
+  .articlecard .hlist li {
+    @apply inline mb-0;
+  }
+
+  .articlecard .hlist li::after {
+    content: " · ";
+    @apply text-gray-400 dark:text-gray-500;
+  }
+
+  .articlecard .hlist li:last-child::after {
+    content: "";
+  }
+
+  /* Infobox label/data columns */
+  .articlecard .infobox-label {
+    @apply font-semibold text-start;
+    @apply whitespace-nowrap w-auto;
+  }
+
+  .articlecard .infobox-data {
+    @apply text-start w-full;
   }
 
   /* ─── GALLERY ───────────────────────────────────────────────── */
