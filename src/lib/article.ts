@@ -73,9 +73,12 @@ export function slimArticle(fullHtml: string | null): string {
     "wikitable", // Standard Wikipedia styled table
     "infobox", // Infobox table (right-floating info panel)
     "infobox-title", // Infobox Title
+    "infobox-label",
+    "infobox-data",
 
     // --- Lists & Columns ---
     "div-col", // Multi-column list wrapper
+    "hlist", // Horizontal list
     "gallery", // Image gallery
     "gallerybox", // Gallery box
     "thumb",
@@ -144,7 +147,7 @@ export function slimArticle(fullHtml: string | null): string {
   });
 
   // Add scrollable containers to tables
-  $("table:not([class])").wrap('<div class="overflow-wrap"></div>');
+  $("table").wrap('<div class="overflow-wrap"></div>');
 
   // Clean colour styling from table
   $("table.infobox th, table.infobox td").each((_, el) => {
