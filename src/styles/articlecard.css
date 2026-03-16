@@ -82,19 +82,15 @@
    */
 
   .articlecard figure {
-    @apply rounded;
-    @apply bg-black/5 dark:bg-white/5;
+    @apply table;
     @apply p-1.5 my-2;
-    @apply text-center;
-    @apply border border-gray-300 dark:border-gray-600;
   }
 
-  .articlecard[data-sidebar-mode="fullscreen"] figure {
-    @apply max-w-1/3;
-  }
-
-  .articlecard[data-sidebar-mode="one-third"] figure {
-    @apply w-full;
+  .articlecard figcaption {
+    @apply table-caption caption-bottom;
+    @apply p-1;
+    @apply italic text-xs;
+    @apply text-balance text-start;
   }
 
   /* Right-float: default Wikipedia behaviour */
@@ -108,19 +104,12 @@
     @apply float-left clear-left mr-4 ml-0;
   }
 
-  /* Inline images — stay in text flow 
-  .articlecard .mw-file-element {
-    @apply block w-full rounded-sm;
-  }
-  */
-
-  /* Images inside figures can be block and centred */
-  .articlecard figure .mw-file-element {
-    @apply block mx-auto;
+  .articlecard[data-sidebar-mode="one-third"] figure {
+    @apply float-none clear-none mx-auto mt-0 ml-auto mr-auto;
   }
 
-  /* The decorative link wrapper around the image */
-  .articlecard .mw-file-description {
+  /* The link wrapper around the image */
+  .articlecard a.mw-file-description {
     @apply no-underline;
   }
 
@@ -131,8 +120,6 @@
 
   /* thumbinner: card-like wrapper inside a figure */
   .articlecard .thumbinner {
-    @apply bg-gray-100 dark:bg-gray-800;
-    @apply border border-gray-300 dark:border-gray-600;
     @apply rounded p-1;
     @apply text-xs leading-snug;
     @apply inline-block;
@@ -145,22 +132,15 @@
 
   /* thumbcaption: caption text below the image */
   .articlecard .thumbcaption {
-    @apply px-1 pt-1;
+    @apply p-1;
     @apply text-xs leading-snug;
-    @apply text-gray-500 dark:text-gray-400;
     @apply text-start italic;
-  }
-
-  .articlecard figcaption {
-    @apply italic m-2;
-    @apply text-start;
-    @apply text-xs text-gray-500 dark:text-gray-400;
-    @apply max-w-full;
   }
 
   /* Images */
   .articlecard figure img {
     @apply bg-white;
+    @apply m-1;
   }
 
   .articlecard img {
@@ -174,8 +154,6 @@
   /* ─── MULTI-IMAGE BLOCKS ────────────────────────────────────── */
 
   .articlecard .multiimageinner {
-    @apply rounded;
-    @apply bg-black/5 dark:bg-white/5;
     @apply p-1.5 my-2 block;
     @apply overflow-x-auto max-w-full;
   }
