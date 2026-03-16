@@ -86,6 +86,7 @@
     @apply bg-black/5 dark:bg-white/5;
     @apply p-1.5 my-2;
     @apply text-center;
+    @apply border border-gray-300 dark:border-gray-600;
   }
 
   .articlecard[data-sidebar-mode="fullscreen"] figure {
@@ -183,9 +184,25 @@
     @apply m-0;
   }
 
+  .articlecard section > div.thumb {
+    @apply ml-4 mr-0;
+  }
+
   .articlecard .thumb {
-    @apply float-right;
     @apply flex justify-center;
+  }
+
+  .articlecard[data-sidebar-mode="one-third"] .thumb {
+    @apply float-none w-full flex-row;
+    @apply m-0;
+  }
+
+  .articlecard[data-sidebar-mode="one-third"] .thumb .thumbinner {
+    @apply w-full! max-w-full!;
+  }
+
+  .articlecard[data-sidebar-mode="fullscreen"] .thumb {
+    @apply float-right;
   }
 
   .articlecard[data-sidebar-mode="one-third"] .multiimageinner {
@@ -205,11 +222,11 @@
   }
 
   .articlecard .thumbimage {
-    @apply h-full mx-auto;
+    @apply mx-auto overflow-hidden;
   }
 
   .articlecard .thumbimage img {
-    @apply w-full h-full object-cover;
+    @apply w-full h-auto;
   }
 
   /* ─── LOCATION MAPS ─────────────────────────────────────────── */
@@ -365,6 +382,17 @@
     @apply bg-black/10 dark:bg-white/10;
     @apply p-3 my-2;
     @apply flex flex-wrap gap-2 list-none;
+  }
+
+  .articlecard .gallerycaption {
+    @apply w-full;
+    @apply text-sm font-semibold text-center;
+    @apply text-gray-600 dark:text-gray-400;
+    @apply pb-1 border-b border-black/10 dark:border-white/10;
+  }
+
+  .articlecard[data-sidebar-mode="fullscreen"] .gallery {
+    @apply mx-auto;
   }
 
   .articlecard .gallerybox {
