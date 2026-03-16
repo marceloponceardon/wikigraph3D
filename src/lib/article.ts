@@ -85,6 +85,7 @@ export function slimArticle(fullHtml: string | null): string {
     "gallerybox", // Gallery box
     "thumb",
     "mw-gallery-nolines", // no lines gallery
+    "gallerycaption",
 
     // --- References ---
     "reference", // Inline superscript citation
