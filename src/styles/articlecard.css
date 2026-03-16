@@ -107,10 +107,11 @@
     @apply float-left clear-left mr-4 ml-0;
   }
 
-  /* Inline images — stay in text flow */
+  /* Inline images — stay in text flow 
   .articlecard .mw-file-element {
-    @apply block w-full h-auto rounded-sm;
+    @apply block w-full rounded-sm;
   }
+  */
 
   /* Images inside figures can be block and centred */
   .articlecard figure .mw-file-element {
@@ -120,7 +121,6 @@
   /* The decorative link wrapper around the image */
   .articlecard .mw-file-description {
     @apply no-underline;
-    @apply block w-full;
   }
 
   /* Inline file spans — keep images in flow colour */
@@ -157,9 +157,13 @@
     @apply max-w-full;
   }
 
-  /* Global img defaults — no mx-auto (would break inline images) */
+  /* Images */
+  .articlecard figure img {
+    @apply bg-white;
+  }
+
   .articlecard img {
-    @apply m-1 bg-white w-auto;
+    @apply bg-transparent;
   }
 
   .articlecard .skin-invert-image {
@@ -179,7 +183,8 @@
     @apply m-0;
   }
 
-  .articlecard[data-sidebar-mode="one-third"] .thumb {
+  .articlecard .thumb {
+    @apply float-right;
     @apply flex justify-center;
   }
 
@@ -188,7 +193,7 @@
   }
 
   .articlecard[data-sidebar-mode="fullscreen"] .multiimageinner {
-    @apply float-right clear-right ml-4 mr-0;
+    @apply float-right clear-right;
   }
 
   .articlecard .trow {
@@ -210,11 +215,29 @@
   /* ─── LOCATION MAPS ─────────────────────────────────────────── */
 
   .articlecard .locmap {
-    @apply float-right clear-right ml-4 mr-0 my-2;
   }
 
-  .articlecard .pr {
-    @apply text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap;
+  /* ─── LOCATION MAP PINS ─────────────────────────────────────── */
+
+  /* The pin overlay container — must be absolute so top/left % work */
+  .articlecard .od {
+    @apply absolute;
+  }
+
+  /* The icon anchor point — also absolutely placed */
+  .articlecard .id {
+    @apply absolute;
+  }
+
+  .articlecard .id img {
+    @apply m-0 p-0;
+    @apply bg-transparent;
+  }
+
+  .articlecard .pr,
+  .article .pv {
+    @apply text-gray-500;
+    @apply text-start;
   }
 
   /* ─── TABLES ────────────────────────────────────────────────── */
@@ -228,7 +251,7 @@
     @apply rounded;
     @apply bg-black/5 dark:bg-white/5;
     @apply p-0 border-collapse text-sm;
-    @apply overflow-x-scroll max-w-full;
+    @apply overflow-x-auto max-w-full;
   }
 
   .articlecard color-diagram {
@@ -247,12 +270,15 @@
   .articlecard[data-sidebar-mode="fullscreen"] table.infobox {
     @apply float-right clear-right;
     @apply ml-4 mb-2 mt-0;
-    @apply w-1/3!;
+    @apply max-w-1/3!;
   }
 
   .articlecard .infobox-title {
     @apply bg-gray-300 dark:bg-gray-700;
     @apply text-base font-bold;
+  }
+  .articlecard .category {
+    @apply text-center;
   }
 
   .articlecard table[role="navigation"] {
@@ -264,7 +290,10 @@
   .articlecard table td {
     @apply border border-gray-300 dark:border-gray-600;
     @apply px-2.5 py-1.5;
-    @apply align-middle text-center;
+    @apply align-middle;
+  }
+
+  .articlecard table tr {
   }
 
   /* Header cells */
@@ -321,6 +350,12 @@
 
   .articlecard .infobox-data {
     @apply text-start w-full;
+  }
+  .articlecard .infobox-full-data {
+    @apply text-center w-full mx-auto;
+  }
+  .articlecard a[typeof="mw:Extension/mapframe"] {
+    @apply block mx-auto;
   }
 
   /* ─── GALLERY ───────────────────────────────────────────────── */

@@ -68,6 +68,7 @@ export function slimArticle(fullHtml: string | null): string {
     "od", // Overlay dot container (holds position via inline style)
     "id", // Inner dot (the actual red dot image)
     "pr", // Label to the right of a map dot
+    "pv", // ''
 
     // --- Tables ---
     "wikitable", // Standard Wikipedia styled table
@@ -75,6 +76,7 @@ export function slimArticle(fullHtml: string | null): string {
     "infobox-title", // Infobox Title
     "infobox-label",
     "infobox-data",
+    "infobox-full-data",
 
     // --- Lists & Columns ---
     "div-col", // Multi-column list wrapper
@@ -97,6 +99,7 @@ export function slimArticle(fullHtml: string | null): string {
     "reference-text", // The actual text of a reference entry
     "citation", // cite element inside a reference
     "quotebox", // block quotes
+    "category", // category
 
     // --- Portal box ---
     "portalbox", // Floating box with portal links (e.g. "Politics portal")
