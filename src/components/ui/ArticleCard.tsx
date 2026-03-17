@@ -49,10 +49,14 @@ const ArticleCard = memo(function ArticleCard({
   useEffect(() => {
     setError(null);
     if (!name) {
-      setHtml("<h6>No node selected...</h6>");
+      setHtml(
+        "<h6 class='ml-[calc(20%-0.75rem)] mr-[20%] my-12'><center>No node selected...</center></h6>",
+      );
       return;
     } else {
-      setHtml("<h6>Loading...</h6>");
+      setHtml(
+        "<h6 class='ml-[calc(20%-0.75rem)] mr-[20%] my-12'><center>Loading...</center></h6>",
+      );
     }
     let slim;
     try {
@@ -222,16 +226,7 @@ const ArticleCard = memo(function ArticleCard({
       <article
         ref={articleRef}
         data-sidebar-mode={sidebarMode}
-        className={clsx(
-          "w-full",
-          "articlecard",
-          "overflow-y-auto",
-          "transition-opacity duration-300",
-          "pb-12",
-          "opacity-100",
-          "mw-parser-output",
-          className ?? "",
-        )}
+        className={clsx("articlecard", className ?? "")}
         dangerouslySetInnerHTML={{ __html: html }}
       />
       {error && (
