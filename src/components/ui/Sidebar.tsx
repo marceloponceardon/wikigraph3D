@@ -191,13 +191,14 @@ export default function Sidebar({
           "duration-500",
           "transition",
           "max-w-screen",
+          "overflow-hidden",
           // State-specific styles
           {
             "w-screen": sidebarMode === "fullscreen",
             "w-screen sm:w-1/3": sidebarMode === "one-third",
           },
           {
-            "bg-white/10 dark:bg-white/10 [transform:translateX(calc(100%-3rem))]":
+            "bg-white/10 dark:bg-white/10 [transform:translateX(calc(100%-48px))]":
               sidebarState === "closed",
             "sm:bg-white/60 dark:sm:bg-black/60": sidebarState !== "closed",
           },
@@ -210,7 +211,7 @@ export default function Sidebar({
             "flex flex-col",
             "place-content-center place-items-center",
             "space-y-2",
-            "w-[3rem]",
+            "w-[48px]",
           )}
         >
           {/* Buttons that change the content rendered in the sidebar */}
@@ -329,7 +330,7 @@ export default function Sidebar({
           // Sidebar container
           className={clsx(
             "flex flex-col",
-            "p-3 pl-1",
+            "p-3 pl-0",
             "h-full w-full",
             "overflow-hidden",
           )}
