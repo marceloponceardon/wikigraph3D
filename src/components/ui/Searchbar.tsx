@@ -62,17 +62,20 @@ export default function Searchbar({
           onChange={setSelectedNode}
           onClose={() => setQuery("")}
         >
-          <div className="relative">
+          <div className="">
             <ComboboxInput
               aria-label="Node"
               displayValue={(node: GraphNode) => node?.name ?? ""}
               placeholder="..."
               onChange={(e) => setQuery(e.target.value)}
               className={clsx(
-                "w-full rounded border-none",
-                "bg-white/100 text-gray-900 ring-2 ring-gray-900/35 dark:bg-black/100 dark:text-white dark:ring-white/35",
-                "hover:ring-gray-900 focus:ring-2 focus:ring-gray-900/100 p-2 dark:hover:ring-white dark:focus:ring-white/100",
-                "text-xl md:text-2xl font-bold",
+                "fixed top-0 left-0 right-0",
+                "backdrop-blur-lg",
+                "p-3 m-1",
+                "text-center",
+                "text-black dark:text-white",
+                "hover:bg-black/10 focus:bg-black/10 dark:hover:bg-white/10 dark:focus:bg-white/10",
+                "text-3xl font-bold",
                 "group",
               )}
             />
@@ -84,18 +87,18 @@ export default function Searchbar({
           <ComboboxOptions
             anchor="bottom start"
             portal
-            className="container absolute overflow-hidden h-auto max-h-screen w-(--input-width) mt-1 rounded-lg ring-3 ring-gray-900/15 bg-white/90 p-1 z-3 dark:ring-white/15 dark:bg-black/90"
+            className="container backdrop-blur-lg absolute overflow-hidden h-auto max-h-screen w-(--input-width) mt-1 border-3 border-gray-900/15 bg-black/10 z-3 dark:border-white/15 dark:bg-white/10"
           >
             {filteredNodes.map((node) => (
               <ComboboxOption
                 key={node.id}
                 value={node}
                 className={clsx(
-                  "group flex cursor-default items-center gap-2 rounded px-3 py-1.5 select-none",
-                  "data-focus:ring-2 data-focus:ring-gray-900 data-focus:ring-offset-0 dark:data-focus:ring-white",
+                  "group flex cursor-default items-center gap-2 px-3 py-1.5 select-none",
+                  "data-focus:bg-black/10 dark:data-focus:bg-white/10",
                 )}
               >
-                <CheckIcon className="invisible size-4 fill-white group-data-selected:visible" />
+                <CheckIcon className="invisible size-4 dark:fill-white fill-black group-data-selected:visible" />
                 <div className="text-sm">{node.name}</div>
               </ComboboxOption>
             ))}
@@ -104,7 +107,7 @@ export default function Searchbar({
                 key="hidden-count"
                 value={{ id: "hidden-count" }}
                 disabled
-                className="italic text-gray-400 flex cursor-default items-center gap-2 rounded px-3 py-1.5 select-none"
+                className="italic text-gray-400 flex cursor-default items-center gap-2 px-3 py-1.5 select-none"
               >
                 ... ({hiddenCount} more{" "}
                 {hiddenCount === 1 ? "result" : "results"} hidden)
