@@ -352,8 +352,6 @@
   /* ─── GALLERY ───────────────────────────────────────────────── */
 
   .articlecard .gallery {
-    @apply rounded;
-    @apply bg-black/10 dark:bg-white/10;
     @apply p-3 my-2;
     @apply flex flex-wrap gap-2 list-none;
   }
@@ -361,8 +359,6 @@
   .articlecard .gallerycaption {
     @apply w-full;
     @apply text-sm font-semibold text-center;
-    @apply text-gray-600 dark:text-gray-400;
-    @apply pb-1 border-b border-black/10 dark:border-white/10;
   }
 
   .articlecard[data-sidebar-mode="fullscreen"] .gallery {
@@ -372,12 +368,11 @@
   .articlecard .gallerybox {
     @apply list-none;
     @apply flex flex-auto flex-col items-center;
-    @apply text-xs text-center text-gray-500 dark:text-gray-400;
+    @apply text-xs text-center;
   }
 
   .articlecard .gallerybox div.thumb {
     @apply rounded;
-    @apply bg-black/10 dark:bg-white/10;
     @apply flex items-center justify-center;
   }
 
