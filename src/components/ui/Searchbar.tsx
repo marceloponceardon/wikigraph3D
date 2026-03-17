@@ -69,10 +69,10 @@ export default function Searchbar({
               placeholder="..."
               onChange={(e) => setQuery(e.target.value)}
               className={clsx(
-                "w-full container rounded border-none",
+                "w-full rounded border-none",
                 "bg-white/100 text-gray-900 ring-2 ring-gray-900/35 dark:bg-black/100 dark:text-white dark:ring-white/35",
                 "hover:ring-gray-900 focus:ring-2 focus:ring-gray-900/100 p-2 dark:hover:ring-white dark:focus:ring-white/100",
-                "text-2xl md:text-3xl font-bold",
+                "text-xl md:text-2xl font-bold",
                 "group",
               )}
             />
