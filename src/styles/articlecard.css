@@ -243,9 +243,7 @@
    */
 
   .articlecard table {
-    @apply rounded;
-    @apply bg-black/5 dark:bg-white/5;
-    @apply p-0 border-collapse text-sm;
+    @apply p-1 border-collapse text-sm;
     @apply overflow-x-auto max-w-full;
   }
 
@@ -269,7 +267,6 @@
   }
 
   .articlecard .infobox-title {
-    @apply bg-gray-300 dark:bg-gray-700;
     @apply text-base font-bold;
   }
   .articlecard .category {
@@ -289,13 +286,11 @@
   }
 
   .articlecard table tr {
-    @apply bg-gray-200 dark:bg-gray-700;
     @apply font-semibold text-center;
   }
 
   /* Infobox title row */
   .articlecard table.infobox > tbody > tr:first-child > th {
-    @apply bg-sky-100 dark:bg-sky-900/40;
     @apply text-center font-semibold text-sm py-2;
   }
 
@@ -446,7 +441,7 @@
     @apply bg-black/5 dark:bg-white/5;
     @apply p-3 my-2;
     @apply text-sm italic;
-    @apply border-l-4 border-sky-400 dark:border-sky-600;
+    @apply border-none;
   }
 
   .articlecard[data-sidebar-mode="one-third"] .quotebox {
