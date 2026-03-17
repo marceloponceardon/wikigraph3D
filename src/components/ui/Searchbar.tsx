@@ -62,16 +62,16 @@ export default function Searchbar({
           onChange={setSelectedNode}
           onClose={() => setQuery("")}
         >
-          <div className="">
+          <div className="fixed top-0 left-0 right-0 m-1">
             <ComboboxInput
               aria-label="Node"
               displayValue={(node: GraphNode) => node?.name ?? ""}
               placeholder="..."
               onChange={(e) => setQuery(e.target.value)}
               className={clsx(
-                "fixed top-0 left-0 right-0",
+                "w-full",
                 "backdrop-blur-lg",
-                "p-3 m-1",
+                "p-3",
                 "text-center",
                 "text-black dark:text-white",
                 "hover:bg-black/10 focus:bg-black/10 dark:hover:bg-white/10 dark:focus:bg-white/10",
@@ -79,8 +79,8 @@ export default function Searchbar({
                 "group",
               )}
             />
-            <ComboboxButton className="absolute inset-y-0 right-0 group">
-              <ChevronDownIcon className="size-8 fill-gray-900 dark:fill-white sm:group-data-hover:fill-gray-900 dark:sm:group-data-hover:fill-white" />
+            <ComboboxButton className="absolute inset-y-0 right-1 group">
+              <ChevronDownIcon className="size-10 fill-gray-900 dark:fill-white sm:group-data-hover:fill-gray-900 dark:sm:group-data-hover:fill-white" />
             </ComboboxButton>
           </div>
 
