@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
-function GitHubIcon({ size = 18 }: { size?: number }) {
+function GitHubIcon({ size = 24 }: { size?: number }) {
   return (
     <svg
       viewBox="0 0 16 16"
@@ -43,7 +43,7 @@ export default function Navbar() {
 
   return (
     <nav>
-      <ul className="space-x-2 text-sm flex font-light space-x-2">
+      <ul className="space-x-2 text-base flex font-light space-x-2">
         {links.map(({ href, label, icon }) => {
           const isActive = pathname === href;
 
