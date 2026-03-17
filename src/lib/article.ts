@@ -69,6 +69,9 @@ export function slimArticle(fullHtml: string | null): string {
     "id", // Inner dot (the actual red dot image)
     "pr", // Label to the right of a map dot
     "pv", // ''
+    "pl", // ''
+    "pt",
+    "pb",
 
     // --- Tables ---
     "wikitable", // Standard Wikipedia styled table

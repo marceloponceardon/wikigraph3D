@@ -8,16 +8,15 @@
     @apply border-transparent;
     content-visibility: auto;
     @apply flow-root;
-    @apply mb-12;
     @apply overflow-x-hidden;
   }
 
   .articlecard[data-sidebar-mode="fullscreen"] > div {
-    margin-left: calc(20% - 0.75rem); /* 1/3 minus the 3-unit button panel */
-    margin-right: 20%; /* clean 1/3 */
+    @apply ml-[calc(20%-0.75rem)] mr-[20%];
   }
 
   .articlecard > * {
+    @apply my-12;
     @apply max-w-full;
   }
 
@@ -229,12 +228,33 @@
     @apply bg-transparent;
   }
 
+  .articlecard .pv,
   .articlecard .pr,
-  .article .pv {
-    @apply text-gray-500;
-    @apply text-start;
+  .articlecard .pl,
+  .articlecard .pt,
+  .articlecard .pb {
+    @apply text-gray-500 text-start absolute;
   }
 
+  /* Right of dot */
+  .articlecard .pr {
+    @apply left-full top-1/2 -translate-y-1/2 pl-1;
+  }
+
+  /* Left of dot */
+  .articlecard .pl {
+    @apply right-full top-1/2 -translate-y-1/2 pr-1 text-end;
+  }
+
+  /* Above dot */
+  .articlecard .pt {
+    @apply bottom-full left-1/2 -translate-x-1/2 pb-1;
+  }
+
+  /* Below dot */
+  .articlecard .pb {
+    @apply top-full left-1/2 -translate-x-1/2 pt-1;
+  }
   /* ─── TABLES ────────────────────────────────────────────────── */
 
   /*
