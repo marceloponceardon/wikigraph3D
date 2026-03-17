@@ -18,24 +18,6 @@
     @apply w-full;
   }
 
-  h1 {
-    @apply text-2xl;
-  }
-  h2 {
-    @apply text-xl;
-  }
-  h3 {
-    @apply text-lg;
-  }
-  h4,
-  h5 {
-    @apply font-bold;
-  }
-
-  h6 {
-    @apply font-light text-xs md:text-sm lg:text-base;
-  }
-
   a {
     @apply hover:underline;
   }
@@ -56,10 +38,6 @@
 }
 
 @layer components {
-  /* About */
-  .about {
-    @apply md:mx-auto max-w-3xl p-4 md:p-12 lg:p-18 space-y-6;
-  }
 }
 
 @layer utilities {
