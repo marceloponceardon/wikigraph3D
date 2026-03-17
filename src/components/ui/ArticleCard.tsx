@@ -50,12 +50,12 @@ const ArticleCard = memo(function ArticleCard({
     setError(null);
     if (!name) {
       setHtml(
-        "<h6 class='ml-[calc(20%-0.75rem)] mr-[20%] my-12'><center>No node selected...</center></h6>",
+        "<h6 class='ml-[calc(20%-0.75rem)] mr-[20%]'><center>No node selected...</center></h6>",
       );
       return;
     } else {
       setHtml(
-        "<h6 class='ml-[calc(20%-0.75rem)] mr-[20%] my-12'><center>Loading...</center></h6>",
+        "<h6 class='ml-[calc(20%-0.75rem)] mr-[20%]'><center>Loading...</center></h6>",
       );
     }
     let slim;

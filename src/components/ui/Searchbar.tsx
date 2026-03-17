@@ -62,7 +62,7 @@ export default function Searchbar({
           onChange={setSelectedNode}
           onClose={() => setQuery("")}
         >
-          <div className="fixed top-0 left-0 right-0 m-1">
+          <div className="fixed top-0 left-0 right-0">
             <ComboboxInput
               aria-label="Node"
               displayValue={(node: GraphNode) => node?.name ?? ""}
@@ -70,8 +70,7 @@ export default function Searchbar({
               onChange={(e) => setQuery(e.target.value)}
               className={clsx(
                 "w-full",
-                "backdrop-blur-lg",
-                "p-3",
+                "h-12 p-3",
                 "text-center",
                 "text-black dark:text-white",
                 "hover:bg-black/10 focus:bg-black/10 dark:hover:bg-white/10 dark:focus:bg-white/10",
@@ -107,7 +106,7 @@ export default function Searchbar({
                 key="hidden-count"
                 value={{ id: "hidden-count" }}
                 disabled
-                className="italic text-gray-400 flex cursor-default items-center gap-2 px-3 py-1.5 select-none"
+                className="text-xs italic flex cursor-default items-center gap-2 px-3 py-1.5 select-none"
               >
                 ... ({hiddenCount} more{" "}
                 {hiddenCount === 1 ? "result" : "results"} hidden)

@@ -9,14 +9,14 @@
     content-visibility: auto;
     @apply flow-root;
     @apply overflow-x-hidden;
+    @apply my-12;
   }
 
   .articlecard[data-sidebar-mode="fullscreen"] > div {
     @apply ml-[calc(20%-0.75rem)] mr-[20%];
   }
 
-  .articlecard > * {
-    @apply my-12;
+  .articlecard > div {
     @apply max-w-full;
   }
 
