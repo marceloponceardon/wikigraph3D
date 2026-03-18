@@ -43,7 +43,6 @@
   .articlecard h2 {
     @apply border-b border-b-gray-300 dark:border-b-gray-600;
     @apply mb-1 mt-4;
-    @apply flow-root;
     @apply text-xl md:text-2xl lg:text-3xl;
     @apply font-semibold;
   }
@@ -175,7 +174,7 @@
   }
 
   .articlecard[data-sidebar-mode="one-third"] .thumb .thumbinner {
-    @apply w-full! max-w-full!;
+    @apply clear-right float-right w-full! max-w-full!;
   }
 
   .articlecard[data-sidebar-mode="fullscreen"] .thumb {
@@ -274,6 +273,10 @@
   .articlecard table.wikitable {
     @apply w-fit my-3;
     @apply block overflow-x-auto;
+  }
+
+  .articlecard table.infobox {
+    @apply border border-gray-300 dark:border-gray-600;
   }
 
   .articlecard[data-sidebar-mode="one-third"] table.infobox {
