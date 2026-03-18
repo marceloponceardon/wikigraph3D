@@ -120,6 +120,7 @@ export function slimArticle(fullHtml: string | null): string {
     "footballbox",
     "mw-invert",
     "skin-invert",
+    "skin-nightmode-reset-color",
 
     // --- Math ---
     "texhtml",
@@ -152,23 +153,38 @@ export function slimArticle(fullHtml: string | null): string {
       $(link).attr("rel", "noopener noreferrer");
     }
   });
+  // Switch relative src urls in <img> tags to absolute ones
+  $("img").each((_, el) => {
+    const $el = $(el);
+
+    const src = $el.attr("src");
+    if (src?.startsWith("//")) $el.attr("src", `https:${src}`);
+
+    const srcset = $el.attr("srcset");
+    if (srcset) {
+      const fixed = srcset.replace(/(,?\s*)\/\//g, "$1https://");
+      $el.attr("srcset", fixed);
+    }
+  });
 
   // Add scrollable containers to tables
   $("table").wrap('<div class="overflow-wrap"></div>');
 
   // Clean colour styling from table
-  $("table.infobox th, table.infobox td").each((_, el) => {
-    const $el = $(el);
-    const style = $el.attr("style") || "";
-    const cleaned = style
-      .split(";")
-      .map((s) => s.trim())
-      .filter((s) => !s.startsWith("background") && !s.startsWith("color"))
-      .join("; ");
+  $("table.infobox th, table.infobox td, .skin-nightmode-reset-color").each(
+    (_, el) => {
+      const $el = $(el);
+      const style = $el.attr("style") || "";
+      const cleaned = style
+        .split(";")
+        .map((s) => s.trim())
+        .filter((s) => !s.startsWith("background") && !s.startsWith("color"))
+        .join("; ");
 
-    if (cleaned) $el.attr("style", cleaned);
-    else $el.removeAttr("style");
-  });
+      if (cleaned) $el.attr("style", cleaned);
+      else $el.removeAttr("style");
+    },
+  );
 
   // Mark styled tables for styling
   $("table").each((_, el) => {
