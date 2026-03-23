@@ -69,8 +69,6 @@ export function useGraphRealtime(
       return;
     }
 
-    let isMounted = true;
-
     const client = supabase.current;
     const channel = client
       .channel(`graph-${todaysDate}`)
@@ -125,23 +123,29 @@ export function useGraphRealtime(
             links: prev.links.filter((l) => l.id !== deletedLink.id),
           }));
         },
-      )
-      .subscribe((status, err) => {
-        if (!isMounted) return;
-        onStatusChange?.(status, err);
-        if (
-          status === "TIMED_OUT" ||
-          status === "CLOSED" ||
-          status === "CHANNEL_ERROR"
-        ) {
-          client.removeChannel(channel);
-        }
-      });
+      );
 
-    return () => {
-      isMounted = false;
+    let activeChannel: typeof channel | null = channel;
+
+    const teardown = () => {
+      if (!activeChannel) return;
+      activeChannel = null;
       client.removeChannel(channel);
     };
+
+    channel.subscribe((status, err) => {
+      if (!activeChannel) return;
+      onStatusChange?.(status, err);
+      if (
+        status === "TIMED_OUT" ||
+        status === "CLOSED" ||
+        status === "CHANNEL_ERROR"
+      ) {
+        teardown();
+      }
+    });
+
+    return () => teardown();
   }, [
     todaysDate,
     setGraphData,
