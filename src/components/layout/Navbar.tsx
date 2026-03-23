@@ -37,7 +37,6 @@ export default function Navbar() {
                   isActive && "font-bold",
                 )}
                 aria-label={label}
-                {...(icon && { target: "_blank", rel: "noopener noreferrer" })}
               >
                 {icon ? (
                   <>
