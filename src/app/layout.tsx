@@ -7,6 +7,9 @@ import { Navbar, Header, Footer } from "@/components/layout";
 export const metadata: Metadata = {
   title: "Wikigraph",
   description: "A 3D graph of Wikipedia articles connected by their hyperlinks",
+  icons: {
+    icon: "/wikigraph_backless.svg",
+  },
 };
 
 export default function RootLayout({
