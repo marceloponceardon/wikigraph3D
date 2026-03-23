@@ -27,7 +27,7 @@
 ## Tech Stack
 
 - [Next.js](https://nextjs.org) — Framework
-- [THREE.js](https://threejs.org), [react-three-fiber](https://github.com/pmndrs/react-three-fiber), [react-three-drei](https://github.com/pmndrs/drei), [react-force-graph](https://github.com/vasturiano/react-force-graph) — 3D Rendering
+- [THREE.js](https://threejs.org), [react-force-graph](https://github.com/vasturiano/react-force-graph) — 3D Graph Rendering
 - [Supabase](https://supabase.com) — Database
 - [Wikimedia API](https://api.wikimedia.org/wiki/Main_Page) — Wikipedia Article Fetching
 
