@@ -136,7 +136,8 @@
   }
 
   /* Images */
-  .articlecard figure img {
+  .articlecard figure img,
+  .articlecard table img {
     @apply bg-white;
     @apply m-1;
   }
@@ -145,7 +146,8 @@
     @apply bg-transparent;
   }
 
-  .articlecard .skin-invert-image {
+  .articlecard .skin-invert-image img,
+  .articlecard img.skin-invert-image {
     @apply dark:invert;
   }
 
