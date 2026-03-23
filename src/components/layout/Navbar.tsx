@@ -23,7 +23,7 @@ export default function Navbar() {
 
   return (
     <nav>
-      <ul className="space-x-2 text-base flex font-light space-x-2">
+      <ul className="space-x-2 text-base flex flex-row items-center font-light space-x-2 justify-center">
         {links.map(({ href, label, icon }) => {
           const isActive = pathname === href;
 
@@ -33,7 +33,7 @@ export default function Navbar() {
                 key={href}
                 href={href}
                 className={clsx(
-                  "inline-flex items-center gap-1",
+                  "flex flex-row items-center gap-1",
                   isActive && "font-bold",
                 )}
                 aria-label={label}
