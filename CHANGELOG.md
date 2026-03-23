@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.1](https://github.com/marsponce/wikigraph3D/compare/v1.1.0...v1.1.1) (2026-03-23)
+
+
+### Bug Fixes
+
+* **articlecard.css:** fix image messing with header ([13610d6](https://github.com/marsponce/wikigraph3D/commit/13610d61fe5aabadf6064f2c9874754a6b9b866e))
+* **articlecard.css:** fix non centering of images in infobox table ([cf58748](https://github.com/marsponce/wikigraph3D/commit/cf58748965fd5312c35d39db9dbe5a5e797861e2))
+* **articlecard.tsx:** visually center loading and no node messges, clean unused styling ([f903430](https://github.com/marsponce/wikigraph3D/commit/f9034304650c8f498c65e2c96afab0940b973e9b))
+* **button:** define button size in px for consistency ([641d209](https://github.com/marsponce/wikigraph3D/commit/641d20928a79f4ccf0573e959aa25d6c77ece4d6))
+* **navbar:** fix home page opening up in new tab ([eef3f42](https://github.com/marsponce/wikigraph3D/commit/eef3f4230c6fc77b0b70b40d0a9b4ae6bbf1ab5b))
+* **searchbar:** remove container width replace with w-full, change to text-xl ([bd8b6f3](https://github.com/marsponce/wikigraph3D/commit/bd8b6f3259d62727a29a9fef2a7ab8fe6a671020))
+
 ## [1.1.0](https://github.com/marsponce/wikigraph3D/compare/v1.0.0...v1.1.0) (2026-03-04)
 
 
