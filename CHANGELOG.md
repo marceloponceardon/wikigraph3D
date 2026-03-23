@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/marsponce/wikigraph3D/compare/v1.1.1...v1.1.2) (2026-03-23)
+
+
+### Bug Fixes
+
+* **layout.tsx:** fix typo in name of logo svg ([68c446a](https://github.com/marsponce/wikigraph3D/commit/68c446a47b52d8cb6dfba2d9af290ebea4cf43be))
+
 ## [1.1.1](https://github.com/marsponce/wikigraph3D/compare/v1.1.0...v1.1.1) (2026-03-23)
 
 
