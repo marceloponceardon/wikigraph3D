@@ -6,10 +6,11 @@ import { GraphData, GraphNode, GraphLink } from "@/types";
 import Graph from "@/components/ui/Graph";
 import type { GraphSettings } from "@/components/ui/Graph";
 import type { ForceGraphMethods } from "react-force-graph-3d";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 import type { GraphStats } from "@/lib/graph";
 import { useGraphRealtime, useTutorial } from "@/lib/graph";
 import { todaysDate } from "@/lib/utils";
+import type { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
 
 export default function Main() {
   // State for the app
@@ -29,9 +30,34 @@ export default function Main() {
   // for node expansion, wait for <this node> when we expand the graph
   const pendingNodeId = useRef<number | null>(null);
 
+  const realTimeToast = (status: REALTIME_SUBSCRIBE_STATES, err?: Error) => {
+    switch (status) {
+      case "TIMED_OUT":
+        toast.warning("Realtime disconnected, refresh to reconnect");
+        break;
+      case "CHANNEL_ERROR":
+        toast.error("Realtime unavailable", { description: err?.message });
+        break;
+      case "SUBSCRIBED":
+        // toast.success("Realtime connected");
+        break;
+      case "CLOSED":
+        toast.warning("Realtime connection closed", {
+          description: "Refresh to reconnect",
+        });
+        break;
+    }
+  };
+
   // sync the graph to the database
   const date = todaysDate();
-  useGraphRealtime(date, setGraphData, setSelectedNode, pendingNodeId);
+  useGraphRealtime(
+    date,
+    setGraphData,
+    setSelectedNode,
+    pendingNodeId,
+    realTimeToast,
+  );
 
   // Graph settings
   const defaults = {
@@ -53,7 +79,7 @@ export default function Main() {
 
   // Store graph settings in localStorage so they persist.
   const [graphSettings, setGraphSettings] = useState<GraphSettings>(() => {
-    if (typeof window === "undefined" || !localStorage) return defaults;
+    if (typeof window === "undefined") return defaults;
     try {
       const stored = localStorage.getItem("graphSettings");
       return stored ? { ...defaults, ...JSON.parse(stored) } : defaults;
