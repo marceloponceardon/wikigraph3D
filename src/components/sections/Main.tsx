@@ -1,7 +1,7 @@
 // src/app/components/sections/Main.tsx
 "use client";
 import { Sidebar } from "../ui";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { GraphData, GraphNode, GraphLink } from "@/types";
 import Graph from "@/components/ui/Graph";
 import type { GraphSettings } from "@/components/ui/Graph";
@@ -30,24 +30,27 @@ export default function Main() {
   // for node expansion, wait for <this node> when we expand the graph
   const pendingNodeId = useRef<number | null>(null);
 
-  const realTimeToast = (status: REALTIME_SUBSCRIBE_STATES, err?: Error) => {
-    switch (status) {
-      case "TIMED_OUT":
-        toast.warning("Realtime disconnected, refresh to reconnect");
-        break;
-      case "CHANNEL_ERROR":
-        toast.error("Realtime unavailable", { description: err?.message });
-        break;
-      case "SUBSCRIBED":
-        // toast.success("Realtime connected");
-        break;
-      case "CLOSED":
-        toast.warning("Realtime connection closed", {
-          description: "Refresh to reconnect",
-        });
-        break;
-    }
-  };
+  const realTimeToast = useCallback(
+    (status: REALTIME_SUBSCRIBE_STATES, err?: Error) => {
+      switch (status) {
+        case "TIMED_OUT":
+          toast.warning("Realtime disconnected, refresh to reconnect");
+          break;
+        case "CHANNEL_ERROR":
+          toast.error("Realtime unavailable", { description: err?.message });
+          break;
+        case "SUBSCRIBED":
+          toast.success("Realtime connected");
+          break;
+        case "CLOSED":
+          toast.warning("Realtime connection closed", {
+            description: "Refresh to reconnect",
+          });
+          break;
+      }
+    },
+    [],
+  );
 
   // sync the graph to the database
   const date = todaysDate();
