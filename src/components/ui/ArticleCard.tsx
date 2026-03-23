@@ -163,7 +163,7 @@ const ArticleCard = memo(function ArticleCard({
         }
 
         // If the href is an internal link, it will start with one of the <hrefStarters>
-        const hrefStarters = ["//en.wikipedia.org/wiki/", "/wiki"];
+        const hrefStarters = ["//en.wikipedia.org/wiki/", "/wiki/"];
         let hrefStarter;
         if (href) {
           hrefStarter = hrefStarters.find((h) => href.startsWith(h));
