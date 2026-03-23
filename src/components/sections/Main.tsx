@@ -32,19 +32,33 @@ export default function Main() {
 
   const realTimeToast = useCallback(
     (status: REALTIME_SUBSCRIBE_STATES, err?: Error) => {
+      const refreshAction = {
+        label: "Refresh",
+        onClick: () => window.location.reload(),
+      };
       switch (status) {
+        case "SUBSCRIBED":
+          toast.success("Graph is live");
+          break;
         case "TIMED_OUT":
-          toast.warning("Realtime disconnected, refresh to reconnect");
+          toast.warning("Live Graph timed out", {
+            description: "Refresh to reconnect",
+            duration: Infinity,
+            action: refreshAction,
+          });
           break;
         case "CHANNEL_ERROR":
-          toast.error("Realtime unavailable", { description: err?.message });
-          break;
-        case "SUBSCRIBED":
-          toast.success("Realtime connected");
+          toast.error("Live Graph unavailable", {
+            description: err?.message,
+            duration: Infinity,
+            action: refreshAction,
+          });
           break;
         case "CLOSED":
-          toast.warning("Realtime connection closed", {
+          toast.warning("Live Graph closed", {
             description: "Refresh to reconnect",
+            duration: Infinity,
+            action: refreshAction,
           });
           break;
       }

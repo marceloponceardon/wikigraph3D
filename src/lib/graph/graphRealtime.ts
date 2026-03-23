@@ -68,6 +68,9 @@ export function useGraphRealtime(
       onStatusChange?.("CHANNEL_ERROR" as REALTIME_SUBSCRIBE_STATES);
       return;
     }
+
+    let isMounted = true;
+
     const client = supabase.current;
     const channel = client
       .channel(`graph-${todaysDate}`)
@@ -123,9 +126,20 @@ export function useGraphRealtime(
           }));
         },
       )
-      .subscribe((status, err) => onStatusChange?.(status, err));
+      .subscribe((status, err) => {
+        if (!isMounted) return;
+        onStatusChange?.(status, err);
+        if (
+          status === "TIMED_OUT" ||
+          status === "CLOSED" ||
+          status === "CHANNEL_ERROR"
+        ) {
+          client.removeChannel(channel);
+        }
+      });
 
     return () => {
+      isMounted = false;
       client.removeChannel(channel);
     };
   }, [
