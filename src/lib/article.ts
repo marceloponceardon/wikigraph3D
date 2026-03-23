@@ -154,6 +154,7 @@ export function slimArticle(fullHtml: string | null): string {
     }
   });
   // Switch relative src urls in <img> tags to absolute ones
+
   $("img").each((_, el) => {
     const $el = $(el);
 
@@ -162,7 +163,7 @@ export function slimArticle(fullHtml: string | null): string {
 
     const srcset = $el.attr("srcset");
     if (srcset) {
-      const fixed = srcset.replace(/(,?\s*)\/\//g, "$1https://");
+      const fixed = srcset.replace(/(,?\s*)(?<!:)\/\//g, "$1https://");
       $el.attr("srcset", fixed);
     }
   });
@@ -171,7 +172,7 @@ export function slimArticle(fullHtml: string | null): string {
   $("table").wrap('<div class="overflow-wrap"></div>');
 
   // Clean colour styling from table
-  $("table.infobox th, table.infobox td, .skin-nightmode-reset-color").each(
+  $("table.ifobox th, table.infobox td, .skin-nightmode-reset-color").each(
     (_, el) => {
       const $el = $(el);
       const style = $el.attr("style") || "";
