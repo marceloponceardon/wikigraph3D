@@ -4,7 +4,7 @@ import { StyledLogo } from "@/components/logo";
 export default function About() {
   return (
     <>
-      <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center-safe">
         <StyledLogo className="" />
         <div className="max-w-prose mx-auto space-y-4">
           <p>
