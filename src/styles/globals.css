@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --text-xs: 18px;
+  --text-xs: 12px;
 }
 
 @layer base {
@@ -18,26 +18,13 @@
     @apply w-full;
   }
 
-  h1 {
-    @apply text-2xl sm:text-3xl md:text-4xl;
-  }
-  h2 {
-    @apply text-xl sm:text-2xl md:text-3xl;
-  }
-  h3 {
-    @apply text-lg sm:text-xl md:text-2xl;
-  }
-  h4,
-  h5 {
-    @apply font-bold text-xl md:text-2xl lg:text-3xl;
-  }
-
-  h6 {
-    @apply text-center font-light text-xs md:text-sm lg:text-base;
-  }
-
   a {
     @apply hover:underline;
+  }
+
+  img,
+  video {
+    @apply max-w-none max-h-none;
   }
 
   noscript {
@@ -51,10 +38,6 @@
 }
 
 @layer components {
-  /* About */
-  .about {
-    @apply md:mx-auto max-w-3xl p-4 md:p-12 lg:p-18 space-y-6;
-  }
 }
 
 @layer utilities {

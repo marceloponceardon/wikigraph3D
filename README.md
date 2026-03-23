@@ -1,37 +1,53 @@
 # Wikigraph3D
 
 <p align="center">
-    <a href="https://github.com/marceloponceardon/wikigraph3D/" target="_blank">
-        <!-- Insert logo here -->
+    <a href="https://github.com/marsponce/wikigraph3D/" target="_blank">
+        <img src="./public/wikigraph3d.svg" alt="Wikigraph3D Logo" width="120" />
     </a>
 </p>
 <p align="center">
-    A 3D graph connecting wikipedia articles by their hyperlinks.
+    A 3D graph connecting Wikipedia articles by their hyperlinks.
 </p>
 <div align="center">
+
+
+<!-- https://github.com/user-attachments/assets/8540bbf1-09ff-4e24-b5a0-f0f165160b62 -->
+![wikigraph3d](https://github.com/user-attachments/assets/2ebcd44c-5e00-4ff1-921c-42d6c9dd6bca)
+
+
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/c6c521be-c5c7-41f6-bfd4-b52ecfcebcfd/deploy-status)](https://app.netlify.com/projects/wikigraph3d/deploys)
 [![.github/workflows/release-please.yml](https://github.com/marsponce/wikigraph3D/actions/workflows/release-please.yml/badge.svg)](https://github.com/marsponce/wikigraph3D/actions/workflows/release-please.yml)
 
 </div>
 
-## Getting Started
 
-_This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app)._
 
-<!-- TODO:
-### Run Locally
--->
 
-### Development
+## Tech Stack
 
-0. `git clone` the repository
-1. `npm install` the required packages
-2. `npm run dev` to run the development server
+- [Next.js](https://nextjs.org) — Framework
+- [THREE.js](https://threejs.org), [react-force-graph](https://github.com/vasturiano/react-force-graph) — 3D Graph Rendering
+- [Supabase](https://supabase.com) — Database
+- [Wikimedia API](https://api.wikimedia.org/wiki/Main_Page) — Wikipedia Article Fetching
 
-**\*Note**: A supabase database with the following tables is required:
+---
 
-### `nodes` Table
+
+## Project Status
+
+See the [project board](https://github.com/users/marsponce/projects/12) for active development tickets.
+
+<details>
+<summary><h2>Development</h2></summary>
+
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+### Prerequisites
+
+A [Supabase](https://supabase.com) database is required with the following schema:
+
+#### `nodes` Table
 
 | Column       | Type                       | Constraints                   | Default                    |
 | ------------ | -------------------------- | ----------------------------- | -------------------------- |
@@ -41,7 +57,7 @@ _This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next
 | `thumbnail`  | `json`                     | NULL                          | -                          |
 | `content`    | `json`                     | NULL                          | -                          |
 
-### `links` Table
+#### `links` Table
 
 | Column       | Type                       | Constraints                                                         | Default                    |
 | ------------ | -------------------------- | ------------------------------------------------------------------- | -------------------------- |
@@ -50,34 +66,18 @@ _This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next
 | `target`     | `bigint`                   | NULL, FOREIGN KEY → `nodes(id)` ON UPDATE CASCADE ON DELETE CASCADE | -                          |
 | `created_at` | `timestamp with time zone` | NOT NULL                                                            | `now() AT TIME ZONE 'utc'` |
 
-(see `.env.example` for where to put relevant environmental variables)
+See `.env.example` for the required environment variables.
 
-- Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Run Locally
 
-_See the current status of the project [HERE](https://github.com/users/marceloponceardon/projects/12) for development tickets._
+1. Clone the repository
+2. Run `npm install` to install dependencies
+3. Run `npm run dev` to start the development server
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+</details>
 
-<!--
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
--->
-
-<!--
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
--->
-
-## Tech Stack
-
-- [Next.js](https://nextjs.org) (Framework)
-- [THREE.js](https://threejs.org), [react-three-fiber](https://github.com/pmndrs/react-three-fiber), [react-three-drei](https://github.com/pmndrs/drei), [react-force-graph](https://github.com/vasturiano/react-force-graph?tab=readme-ov-file) (3D Rendering)
-- [Wikimedia API](https://api.wikimedia.org/wiki/Main_Page) (Wikipedia Article Fetching)
-
-<!-- TODO:
-## License
--->
+---
 
 <p align="center">
-    made by: Mars Ponce
+    built by: Mars Ponce
 </p>

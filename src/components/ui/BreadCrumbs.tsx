@@ -98,8 +98,7 @@ export default function BreadCrumbs({
         className={clsx(
           "fixed bottom-0 right-0",
           "w-full",
-          "backdrop-blur-lg",
-          "p-3",
+          "h-12",
           "overflow-x-auto whitespace-nowrap",
           "[direction:rtl]",
           "transition-opacity duration-500",

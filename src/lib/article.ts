@@ -20,35 +20,114 @@ export function slimArticle(fullHtml: string | null): string {
 
   // Stuff to drop TODO: Finalize this in a later ticket
   const DROP = [
-    ".metadata",
-    //    ".infobox",
-    //    ".toc",
-    ".navbox",
-    ".vertical-navbox",
-    //    ".ambox",
-    //    ".hatnote",
-    //    ".reflist",
-    //    ".mw-empty-elt",
-    //    "aside",
-    "script",
+    "link[rel^='mw:']",
+    "link[rel^='mw-deduplicated']",
+    "meta",
     "style",
-    "noscript",
-    "iframe",
-    ".shortdescription",
-    ".mw-editsection",
+    "mw-editsection",
+    ".navbox",
+    ".navbox-styles",
+    ".navbox-inner",
+    ".navbox-subgroup",
+    ".mw-collapsible",
+    ".sidebar",
+    ".sister-bar",
+    ".noprint",
+    ".metadata",
   ];
   DROP.forEach((sel) => $(sel).remove());
 
   const ALLOW_CLASSES = new Set([
-    "infobox",
-    "wikitable",
-    "portalbox",
-    "reference",
-    "reflist",
-    "references",
-    "refbegin",
-    "catlinks",
+    // --- Headings ---
+    "mw-heading", // Parsoid wrapper div around all headings
+    "mw-heading2", // h2 level
+    "mw-heading3", // h3 level
+    "mw-heading4", // h4 level
+
+    // --- Figures & Images ---
+    "mw-default-size", // Parsoid default image sizing
+    "mw-halign-left", // Float image left
+    "mw-halign-right", // Float image right
+    "mw-file-description", // Anchor wrapping images
+    "mw-file-element", // The img element itself
+    "thumbinner", // Wrapper inside a thumb figure
+    "thumbimage", // The image container inside thumbinner
+    "thumbcaption", // Caption inside a thumb
+    "skin-invert-image", // Invert this image
+
+    // --- Multi-image layouts ---
+    "multiimageinner", // Outer wrapper for multi-image blocks
+    "trow", // Row in a multi-image layout
+    "tsingle", // Single image cell in a multi-image layout
+
+    // --- Location maps ---
+    "locmap", // Outer map container
+    "noresize", // Prevents map resizing
+    "notpageimage", // Prevents image being used as page thumbnail
+    "noviewer", // Disables media viewer on click
+    "od", // Overlay dot container (holds position via inline style)
+    "id", // Inner dot (the actual red dot image)
+    "pr", // Label to the right of a map dot
+    "pv", // ''
+    "pl", // ''
+    "pt",
+    "pb",
+
+    // --- Tables ---
+    "wikitable", // Standard Wikipedia styled table
+    "infobox", // Infobox table (right-floating info panel)
+    "infobox-title", // Infobox Title
+    "infobox-label",
+    "infobox-data",
+    "infobox-full-data",
+
+    // --- Lists & Columns ---
+    "div-col", // Multi-column list wrapper
+    "hlist", // Horizontal list
+    "gallery", // Image gallery
+    "gallerybox", // Gallery box
+    "thumb",
+    "mw-gallery-nolines", // no lines gallery
+    "gallerycaption",
+
+    // --- References ---
+    "reference", // Inline superscript citation
+    "references", // The references list
+    "reflist", // Wrapper around references list
+    "refbegin", // Wrapper for bibliography/sources sections
+    "mw-references-wrap", // Parsoid outer reference wrapper
+    "mw-references-columns", // Multi-column references layout
+    "mw-ref", // Parsoid inline reference superscript
+    "mw-reflink-text", // The [1] text inside a ref link
+    "cite-bracket", // The [ and ] around ref numbers
+    "reference-text", // The actual text of a reference entry
+    "citation", // cite element inside a reference
+    "quotebox", // block quotes
+    "category", // category
+
+    // --- Portal box ---
+    "portalbox", // Floating box with portal links (e.g. "Politics portal")
+
+    // --- Side box ---
+    "side-box",
+    "side-box-right",
+    "side-box-flex",
+    "side-box-image",
+    "side-box-text",
+
+    // --- Misc ---
+    "catlinks", // Category links at the bottom of the article
+    "footballbox",
+    "mw-invert",
+    "skin-invert",
+    "skin-nightmode-reset-color",
+
+    // --- Math ---
+    "texhtml",
+    "mwe-math-element",
+    "mwe-math-fallback-image-inline",
   ]);
+
   // Remove non-allowed classes
   $("[class]").each((i, elt) => {
     const $elt = $(elt);
@@ -61,6 +140,9 @@ export function slimArticle(fullHtml: string | null): string {
     else $elt.removeAttr("class");
   });
 
+  // Remove all default styling
+  // $("[style]").removeAttr("style");
+
   // Switch outside wikipedia <a> tags to open in new window
   $("a").each((i, link) => {
     const href = $(link).attr("href");
@@ -71,11 +153,60 @@ export function slimArticle(fullHtml: string | null): string {
       $(link).attr("rel", "noopener noreferrer");
     }
   });
+  // Switch relative src urls in <img> tags to absolute ones
+
+  $("img").each((_, el) => {
+    const $el = $(el);
+
+    const src = $el.attr("src");
+    if (src?.startsWith("//")) $el.attr("src", `https:${src}`);
+
+    const srcset = $el.attr("srcset");
+    if (srcset) {
+      const fixed = srcset.replace(/(,?\s*)(?<!:)\/\//g, "$1https://");
+      $el.attr("srcset", fixed);
+    }
+  });
+
+  // Add scrollable containers to tables
+  $("table").wrap('<div class="overflow-wrap"></div>');
+
+  // Clean colour styling from table
+  $("table.ifobox th, table.infobox td, .skin-nightmode-reset-color").each(
+    (_, el) => {
+      const $el = $(el);
+      const style = $el.attr("style") || "";
+      const cleaned = style
+        .split(";")
+        .map((s) => s.trim())
+        .filter((s) => !s.startsWith("background") && !s.startsWith("color"))
+        .join("; ");
+
+      if (cleaned) $el.attr("style", cleaned);
+      else $el.removeAttr("style");
+    },
+  );
+
+  // Mark styled tables for styling
+  $("table").each((_, el) => {
+    const $el = $(el);
+    const hasColorStyling = $el
+      .find("[style]")
+      .toArray()
+      .some((child) => {
+        const style = $(child).attr("style") || "";
+        return style.match(/background|color/i);
+      });
+    if (hasColorStyling) $el.wrap('<div class="color-diagram"></div>');
+  });
 
   // Cleanup
   $("span:empty. p:empty").remove();
-  // Remove all default styling
-  $("[style]").removeAttr("style");
+  $("*")
+    .contents()
+    .each((_, node) => {
+      if (node.type === "comment") $(node).remove();
+    });
   const slim = $("body").length ? $("body").html() : "";
   slim!.trim();
   console.debug("Slimming article complete!");
