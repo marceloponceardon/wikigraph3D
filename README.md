@@ -79,5 +79,5 @@ See `.env.example` for the required environment variables.
 ---
 
 <p align="center">
-_    built by: Mars Ponce_
+    built by: Mars Ponce
 </p>
