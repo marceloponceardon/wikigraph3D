@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Wikigraph",
   description: "A 3D graph of Wikipedia articles connected by their hyperlinks",
   icons: {
-    icon: "/wikigraph3d_favicon.svg",
+    icon: "/wikigraph3d.svg",
   },
 };
 
