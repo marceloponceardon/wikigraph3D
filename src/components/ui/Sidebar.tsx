@@ -247,6 +247,7 @@ export default function Sidebar({
             aria-label={"Toggle sidebar width"}
             title={"Toggle sidebar width (M)"}
             disabled={sidebarState === "closed"}
+            className="hidden sm:block"
           >
             {sidebarMode === "fullscreen" ? (
               <ArrowsPointingInIcon />
