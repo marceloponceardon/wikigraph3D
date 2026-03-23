@@ -95,10 +95,11 @@ export default function Sidebar({
     });
   }, [prevSidebarState]);
 
-  const toggleSidebarMode = () => {
-    if (sidebarMode === "fullscreen") setSidebarMode("one-third");
-    else setSidebarMode("fullscreen");
-  };
+  const toggleSidebarMode = useCallback(() => {
+    setSidebarMode((prev) =>
+      prev === "fullscreen" ? "one-third" : "fullscreen",
+    );
+  }, []); // no deps needed since we use the functional updater form
 
   const selectRootNode = useCallback(() => {
     setSelectedNode(getRootNode(graphData, todaysDate()));
@@ -147,6 +148,9 @@ export default function Sidebar({
         case "t":
           startTutorial();
           break;
+        case "m":
+          if (sidebarState !== "closed") toggleSidebarMode();
+          break;
         case "Escape":
           if (sidebarState !== "closed") toggleSidebar();
           else setSelectedNode(null);
@@ -164,6 +168,7 @@ export default function Sidebar({
       startTutorial,
       isTutorialActive,
       toggleSidebar,
+      toggleSidebarMode,
     ],
   );
 
@@ -233,6 +238,20 @@ export default function Sidebar({
               <ChevronLeftIcon />
             ) : (
               <ChevronRightIcon />
+            )}
+          </Button>
+          {/* sidebar mode */}
+          <Button
+            id="sidebarmode"
+            onClick={() => toggleSidebarMode()}
+            aria-label={"Toggle sidebar width"}
+            title={"Toggle sidebar width (M)"}
+            disabled={sidebarState === "closed"}
+          >
+            {sidebarMode === "fullscreen" ? (
+              <ArrowsPointingInIcon />
+            ) : (
+              <ArrowsPointingOutIcon />
             )}
           </Button>
           {/* Article Button */}
@@ -311,19 +330,6 @@ export default function Sidebar({
             title={"Replay the tutorial (T)"}
           >
             <QuestionMarkCircleIcon />
-          </Button>
-          {/* sidebar mode */}
-          <Button
-            id="tutorial"
-            onClick={() => toggleSidebarMode()}
-            aria-label={"Set sidebarMode"}
-            title={"Set sidebarMode"}
-          >
-            {sidebarMode === "fullscreen" ? (
-              <ArrowsPointingInIcon />
-            ) : (
-              <ArrowsPointingOutIcon />
-            )}
           </Button>
         </div>
         <div
