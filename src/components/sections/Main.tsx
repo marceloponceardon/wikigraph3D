@@ -1,15 +1,16 @@
 // src/app/components/sections/Main.tsx
 "use client";
 import { Sidebar } from "../ui";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { GraphData, GraphNode, GraphLink } from "@/types";
 import Graph from "@/components/ui/Graph";
 import type { GraphSettings } from "@/components/ui/Graph";
 import type { ForceGraphMethods } from "react-force-graph-3d";
-import { Toaster } from "sonner";
+import { toast, Toaster } from "sonner";
 import type { GraphStats } from "@/lib/graph";
 import { useGraphRealtime, useTutorial } from "@/lib/graph";
 import { todaysDate } from "@/lib/utils";
+import type { REALTIME_SUBSCRIBE_STATES } from "@supabase/supabase-js";
 
 export default function Main() {
   // State for the app
@@ -29,9 +30,51 @@ export default function Main() {
   // for node expansion, wait for <this node> when we expand the graph
   const pendingNodeId = useRef<number | null>(null);
 
+  const realTimeToast = useCallback(
+    (status: REALTIME_SUBSCRIBE_STATES, err?: Error) => {
+      const refreshAction = {
+        label: "Refresh",
+        onClick: () => window.location.reload(),
+      };
+      switch (status) {
+        case "SUBSCRIBED":
+          toast.success("Graph is live");
+          break;
+        case "TIMED_OUT":
+          toast.warning("Live Graph timed out", {
+            description: "Refresh to reconnect",
+            duration: Infinity,
+            action: refreshAction,
+          });
+          break;
+        case "CHANNEL_ERROR":
+          toast.error("Live Graph unavailable", {
+            description: err?.message,
+            duration: Infinity,
+            action: refreshAction,
+          });
+          break;
+        case "CLOSED":
+          toast.warning("Live Graph closed", {
+            description: "Refresh to reconnect",
+            duration: Infinity,
+            action: refreshAction,
+          });
+          break;
+      }
+    },
+    [],
+  );
+
   // sync the graph to the database
   const date = todaysDate();
-  useGraphRealtime(date, setGraphData, setSelectedNode, pendingNodeId);
+  useGraphRealtime(
+    date,
+    setGraphData,
+    setSelectedNode,
+    pendingNodeId,
+    realTimeToast,
+  );
 
   // Graph settings
   const defaults = {
@@ -53,7 +96,7 @@ export default function Main() {
 
   // Store graph settings in localStorage so they persist.
   const [graphSettings, setGraphSettings] = useState<GraphSettings>(() => {
-    if (typeof window === "undefined" || !localStorage) return defaults;
+    if (typeof window === "undefined") return defaults;
     try {
       const stored = localStorage.getItem("graphSettings");
       return stored ? { ...defaults, ...JSON.parse(stored) } : defaults;

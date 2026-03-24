@@ -56,6 +56,7 @@ export async function GET(req: Request) {
       linksCount: links?.length || 0,
     });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
         error: "Internal Server Error",

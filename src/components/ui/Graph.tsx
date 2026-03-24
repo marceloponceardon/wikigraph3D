@@ -389,7 +389,8 @@ export default function Graph({
 
   const getLinkColor = useCallback(
     (link: GraphLink): string => {
-      if (edgeColorMode !== "depth" || nodeDepths.size === 0) return "#ffffff";
+      if (edgeColorMode !== "depth") return "#ffffffff";
+      // if (edgeColorMode !== "depth" || nodeDepths.size === 0) return "#ffffff";
       const tgt =
         typeof link.target === "object"
           ? (link.target as GraphNode).id!

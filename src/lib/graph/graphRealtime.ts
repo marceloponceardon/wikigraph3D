@@ -2,7 +2,10 @@
 import { useEffect, useRef, Dispatch, SetStateAction, RefObject } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { GraphData, GraphNode, GraphLink } from "@/types";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type {
+  SupabaseClient,
+  REALTIME_SUBSCRIBE_STATES,
+} from "@supabase/supabase-js";
 import { resolveID } from "@/lib/graph";
 
 export function mergeGraphRealtime(
@@ -51,11 +54,22 @@ export function useGraphRealtime(
   setGraphData: Dispatch<SetStateAction<GraphData>>,
   setSelectedNode: Dispatch<SetStateAction<GraphNode | null>>,
   pendingNodeId: RefObject<number | null>,
+  onStatusChange?: (status: REALTIME_SUBSCRIBE_STATES, err?: Error) => void,
 ): void {
-  const supabase = useRef<SupabaseClient>(createClient());
+  const supabase = useRef<SupabaseClient | null>(null);
   useEffect(() => {
-    const client = supabase.current;
+    try {
+      supabase.current = createClient();
+    } catch {
+      onStatusChange?.("CHANNEL_ERROR" as REALTIME_SUBSCRIBE_STATES);
+      return;
+    }
+    if (!supabase.current) {
+      onStatusChange?.("CHANNEL_ERROR" as REALTIME_SUBSCRIBE_STATES);
+      return;
+    }
 
+    const client = supabase.current;
     const channel = client
       .channel(`graph-${todaysDate}`)
       .on(
@@ -109,11 +123,34 @@ export function useGraphRealtime(
             links: prev.links.filter((l) => l.id !== deletedLink.id),
           }));
         },
-      )
-      .subscribe();
+      );
 
-    return () => {
+    let activeChannel: typeof channel | null = channel;
+
+    const teardown = () => {
+      if (!activeChannel) return;
+      activeChannel = null;
       client.removeChannel(channel);
     };
-  }, [todaysDate, setGraphData, setSelectedNode, pendingNodeId]);
+
+    channel.subscribe((status, err) => {
+      if (!activeChannel) return;
+      onStatusChange?.(status, err);
+      if (
+        status === "TIMED_OUT" ||
+        status === "CLOSED" ||
+        status === "CHANNEL_ERROR"
+      ) {
+        teardown();
+      }
+    });
+
+    return () => teardown();
+  }, [
+    todaysDate,
+    setGraphData,
+    setSelectedNode,
+    pendingNodeId,
+    onStatusChange,
+  ]);
 }
