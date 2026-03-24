@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.3](https://github.com/marsponce/wikigraph3D/compare/v1.1.2...v1.1.3) (2026-03-24)
+
+
+### Bug Fixes
+
+* **api:** add service role auth check in supabase, added secret key use to server client ([ab80a1a](https://github.com/marsponce/wikigraph3D/commit/ab80a1ad8bbc6d94b1f7cf3f604e02f3dc03d3bf))
+* **articlecard:** fix redirect links not working ([a741f49](https://github.com/marsponce/wikigraph3D/commit/a741f491719215913cd2287b85420a4f917ee1a1))
+* **articlecard:** remove maxage 1 left behind from development ([4a0d994](https://github.com/marsponce/wikigraph3D/commit/4a0d9947e28c3ca76fa3faf0576766767786a5c0))
+* fix infinite recursion on disconnect, reword toasts ([2be5af2](https://github.com/marsponce/wikigraph3D/commit/2be5af21c73c3d41d2ada405b22948700a87cf72))
+* **graph:** fix white links bug for first client to load aotd ([2a9ed4f](https://github.com/marsponce/wikigraph3D/commit/2a9ed4f729d95b7012bd9783e45d923473eb3d9b))
+* **graphRealtime:** fix crashing app when realtime is unavailable ([3ffba7f](https://github.com/marsponce/wikigraph3D/commit/3ffba7fb5084a03aa3ddf4cfee5e62197abced5b))
+* refactor to fix infinite loop ([ef4bc80](https://github.com/marsponce/wikigraph3D/commit/ef4bc80333efe437e299975441d9872f20c2796d))
+* **sidebar:** hide sidebar mode toggle button on mobile ([1245c38](https://github.com/marsponce/wikigraph3D/commit/1245c3852cde0197111bd2b0217eaa3ec103b661))
+* **supabase:** usecallback on realtimetoast, added cookieless callback ([f8d59a6](https://github.com/marsponce/wikigraph3D/commit/f8d59a60260f4128f4a2e0eb9e97170771ef783c))
+
 ## [1.1.2](https://github.com/marsponce/wikigraph3D/compare/v1.1.1...v1.1.2) (2026-03-23)
 
 
