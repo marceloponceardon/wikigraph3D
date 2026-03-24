@@ -87,17 +87,20 @@ const buildSteps = (isMobile: boolean): DriveStep[] => [
     },
     disableActiveInteraction: true,
   },
-  {
-    element: "#sidebarmode",
-    popover: {
-      title: "Toggle Sidebar Width",
-      description:
-        "Switch between one-third and fullscreen widths. Press <kbd>M</kbd> to toggle.",
-      side: "left",
-      align: "start",
-    },
-    disableActiveInteraction: true,
-  },
+  ...(!isMobile
+    ? [
+        {
+          element: "#sidebarmode",
+          popover: {
+            title: "Toggle Sidebar Width",
+            align: "start" as const,
+            description:
+              "Switch between one-third and fullscreen widths. Press <kbd>M</kbd> to toggle.",
+          },
+          disableActiveInteraction: true,
+        },
+      ]
+    : []),
   {
     element: "#articles",
     popover: {
