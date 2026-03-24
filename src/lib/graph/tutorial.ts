@@ -31,6 +31,7 @@ const mobileControls = `
 const keyboardShortcuts = `
   <table style="width: 100%; border-collapse: collapse;">
     <tr><td><kbd>Space</kbd></td><td style="text-align: center;">—</td><td>Open/Close Sidebar</td></tr>
+    <tr><td><kbd>M</kbd></td><td style="text-align: center;">—</td><td>Toggle Sidebar Width</td></tr>
     <tr><td><kbd>A</kbd></td><td style="text-align: center;">—</td><td>Articles</td></tr>
     <tr><td><kbd>S</kbd></td><td style="text-align: center;">—</td><td>Settings</td></tr>
     <tr><td><kbd>D</kbd></td><td style="text-align: center;">—</td><td>Downloads</td></tr>
@@ -81,6 +82,17 @@ const buildSteps = (isMobile: boolean): DriveStep[] => [
       title: "Open / Close Sidebar",
       description:
         "Open / Close the Sidebar. Press <kbd>Space</kbd> to toggle.",
+      side: "left",
+      align: "start",
+    },
+    disableActiveInteraction: true,
+  },
+  {
+    element: "#sidebarmode",
+    popover: {
+      title: "Toggle Sidebar Width",
+      description:
+        "Switch between one-third and fullscreen widths. Press <kbd>M</kbd> to toggle.",
       side: "left",
       align: "start",
     },
