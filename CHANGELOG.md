@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/marsponce/wikigraph3D/compare/v1.1.3...v1.1.4) (2026-03-24)
+
+
+### Bug Fixes
+
+* **tutorial:** hide sidebar width button on mobile ([afb7e00](https://github.com/marsponce/wikigraph3D/commit/afb7e0023b57e1fc349cff0c8984e667f861f929))
+
 ## [1.1.3](https://github.com/marsponce/wikigraph3D/compare/v1.1.2...v1.1.3) (2026-03-24)
 
 
